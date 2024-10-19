@@ -26,7 +26,7 @@ const Sidebar = () => {
       <div className="text-gray-500">
         {sideBarItems.map((item, index) => {
           return (
-            <div className="flex items-center gap-4 pl-6 py-1 rounded-r-full cursor-pointer hover:bg-gray-200 my-2 transition-all duration-200 ease-in-out">
+            <div key={Math.random()} className="flex items-center gap-4 pl-6 py-1 rounded-r-full cursor-pointer hover:bg-gray-200 my-2 transition-all duration-200 ease-in-out">
               {item.icon}
               <p>{item.text}</p>
             </div>
