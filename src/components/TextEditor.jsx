@@ -15,6 +15,7 @@ const TextEditor = ({ value, onChange }) => {
         }
 
   return (
+    <div className="custom-quill-editor">
     <ReactQuill
       value={value}
       onChange={onChange}
@@ -22,6 +23,7 @@ const TextEditor = ({ value, onChange }) => {
       placeholder="Compose your message here..."
       theme="snow"
     />
+  </div>
   );
 };
 

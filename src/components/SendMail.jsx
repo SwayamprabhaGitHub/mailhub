@@ -1,22 +1,74 @@
-import React from 'react'
+import React, { useState } from "react";
 import { RxCross1 } from "react-icons/rx";
-import ComposeMail from './ComposeMail';
+import ComposeMail from "./ComposeMail";
+import { useDispatch, useSelector } from "react-redux";
+import { setOpen } from "../redux/appSlice";
 
 const SendMail = () => {
+  const open = useSelector((state) => state.appSlice.open);
+  const dispatch = useDispatch();
+
+  const [to, setTo] = useState("");
+  const [subject, setSubject] = useState("");
+  const [editorContent, setEditorContent] = useState("");
+
+  const stripHtml = (html) => {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return div.textContent || div.innerText || '';
+};
+
+
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    const formData = {
+      to: to,
+      subject: subject,
+      message: stripHtml(editorContent),
+    };
+    console.log(formData);
+    dispatch(setOpen(false));
+    setTo("");
+    setSubject("");
+    setEditorContent("");
+  };
+
   return (
-    <div className='bg-white max-w-xl max-h-min shadow-xl shadow-slate-600 rounded-t-md'>
-        <div className='flex px-3 py-2 bg-[#F2F6Fc] justify-between rounded-t-md'>
-            <h1>New message</h1>
-            <div className='p-2 hover:text-white hover:bg-[#E11325] cursor-pointer transition-all duration-1000 ease-in-out hover:rotate-90'>
-                <RxCross1/>
-            </div>
+    <div
+      className={`${
+        open ? "block" : "hidden"
+      } bg-[#eff1fc] max-w-xl max-h-min shadow-xl shadow-slate-600 rounded-t-md`}
+    >
+      <div className="flex px-3 py-2 bg-[#F2F6Fc] justify-between rounded-t-md">
+        <h1>New message</h1>
+        <div
+          onClick={() => dispatch(setOpen(false))}
+          className="p-2 hover:text-white hover:bg-[#E11325] cursor-pointer transition-all duration-1000 ease-in-out hover:rotate-90"
+        >
+          <RxCross1 />
         </div>
-        <form action='' className='flex flex-col gap-2 p-3'>
-            <ComposeMail />
-            <button type='submit' className='bg-[#0B57D0] rounded-full w-fit px-4 text-white font-medium'>Send</button>
-        </form>
+      </div>
+      <form
+        onSubmit={handleFormSubmit}
+        className="flex flex-col gap-2 p-3 bg-white"
+      >
+        <ComposeMail
+          to={to}
+          setTo={setTo}
+          subject={subject}
+          setSubject={setSubject}
+          editorContent={editorContent}
+          setEditorContent={setEditorContent}
+        />
+        <button
+          type="submit"
+          className="bg-[#0B57D0] rounded-full w-fit px-6 py-1 text-white font-medium text-lg hover:bg-[#246fe8] hover:shadow-lg transition-all duration-200 ease-in-out hover:scale-105 active:scale-95 "
+        >
+          Send
+        </button>
+      </form>
     </div>
-  )
-}
+  );
+};
 
 export default SendMail;

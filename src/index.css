@@ -4,14 +4,26 @@
 
 /* Tailwind custom styles for Quill */
 .ql-toolbar {
-    @apply border-b border-gray-300;
+  @apply border-none;
+}
+
+.ql-container {
+  @apply min-h-[300px];
+}
+
+.ql-editor {
+  @apply text-gray-800 p-2;
+}
+/* Custom styles for Quill editor */
+.custom-quill-editor .ql-container {
+    @apply border-none; /* Remove the border around the editor */
   }
   
-  .ql-container {
-    @apply min-h-[300px];
+  .custom-quill-editor .ql-toolbar {
+    @apply border-b-slate-300 border-t-0 border-r-0 border-l-0; /* Remove the border around the toolbar */
   }
   
-  .ql-editor {
-    @apply text-gray-800 p-2;
+  .custom-quill-editor .ql-editor {
+    @apply focus:outline-none; /* Remove focus outline when editing */
   }
   
