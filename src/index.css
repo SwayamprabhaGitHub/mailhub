@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Tailwind custom styles for Quill */
+.ql-toolbar {
+    @apply border-b border-gray-300;
+  }
+  
+  .ql-container {
+    @apply min-h-[300px];
+  }
+  
+  .ql-editor {
+    @apply text-gray-800 p-2;
+  }
+  
