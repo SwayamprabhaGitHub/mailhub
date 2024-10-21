@@ -3,6 +3,8 @@ import { RxCross1 } from "react-icons/rx";
 import ComposeMail from "./ComposeMail";
 import { useDispatch, useSelector } from "react-redux";
 import { setOpen } from "../redux/appSlice";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { db } from "../firebase";
 
 const SendMail = () => {
   const open = useSelector((state) => state.appSlice.open);
@@ -13,20 +15,25 @@ const SendMail = () => {
   const [editorContent, setEditorContent] = useState("");
 
   const stripHtml = (html) => {
-    const div = document.createElement('div');
+    const div = document.createElement("div");
     div.innerHTML = html;
-    return div.textContent || div.innerText || '';
-};
+    return div.textContent || div.innerText || "";
+  };
 
+  const formData = {
+    to: to,
+    subject: subject,
+    message: stripHtml(editorContent),
+  };
 
-  const handleFormSubmit = (event) => {
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
-    const formData = {
-      to: to,
-      subject: subject,
-      message: stripHtml(editorContent),
-    };
-    console.log(formData);
+    await addDoc(collection(db, "emails"), {
+      to: formData.to,
+      subject: formData.subject,
+      message: formData.message,
+      createdAt: serverTimestamp(),
+    });
     dispatch(setOpen(false));
     setTo("");
     setSubject("");
