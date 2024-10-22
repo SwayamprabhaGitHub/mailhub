@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoIosSearch } from "react-icons/io";
 import { CiCircleQuestion } from "react-icons/ci";
 import { IoSettingsOutline } from "react-icons/io5";
 import { TbGridDots } from "react-icons/tb";
 import Avatar from "react-avatar";
+import { useDispatch } from "react-redux";
+import { setSearchText } from "../../redux/appSlice";
 
 const Navbar = () => {
+  const [input, setInput] = useState("");
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+      dispatch(setSearchText(input))
+  },[input])
+
   return (
     <div className="flex items-center justify-between mx-3 h-16">
       <div className="flex items-center gap-10">
@@ -31,6 +40,8 @@ const Navbar = () => {
           </div>
           <input
             type="search"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
             placeholder="Search Mail"
             className="rounded-full w-full bg-transparent outline-none px-1 placeholder:text-gray-500"
           />

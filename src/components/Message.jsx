@@ -3,11 +3,12 @@ import { MdCropSquare } from "react-icons/md";
 import { RiStarLine } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 
-const Message = () => {
+const Message = ({email}) => {
     const navigate = useNavigate();
     const openMail = () => {
-        navigate("/inbox/934r439r43ir");
+        navigate(`/inbox/${email.id}`);
     }
+    console.log(email);
   return (
     <div onClick={openMail} className="flex items-start justify-between border-b border-gray-200 px-4 py-2 text-sm cursor-pointer hover:shadow-md transition-all duration-1000 ease-in-out">
         <div className="flex items-center gap-3">
@@ -19,11 +20,12 @@ const Message = () => {
                 <RiStarLine className="w-5 h-5" />
             </div>
         </div>
-        <div className="flex-1 ml-4">
-            <p className="text-gray-600 truncate inline-block max-w-full">Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis vitae sit beatae eius assumenda hic!</p>
+        <div className="flex-1 ml-4 flex items-center">
+            <p className="text-black font-bold w-64">{email?.to}</p>
+            <p className="text-gray-600 truncate inline-block w-[50rem]"><strong>{email?.subject}</strong>-{email?.message}</p>
         </div>
         <div className="flex-none text-gray-400 text-sm">
-            time ayega
+            <p>{email?.createdAt}</p>
         </div>
     </div>
   );
