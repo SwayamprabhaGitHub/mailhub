@@ -20,7 +20,7 @@ const Sidebar = () => {
   const dispatch = useDispatch();
 
   return (
-    <div className="w-[15%]">
+    <div className="w-[12%]">
       <div className="p-3 pt-1">
         <button onClick={() => dispatch(setOpen(true))} className="flex items-center gap-2 p-4 rounded-2xl hover:shadow-md hover:scale-105 bg-[#C2E7FF] transition-all duration-200 ease-in-out active:scale-95">
           <LuPencil size={"20px"} />
@@ -30,7 +30,7 @@ const Sidebar = () => {
       <div className="text-gray-500">
         {sideBarItems.map((item, index) => {
           return (
-            <div key={Math.random()} className="flex items-center gap-4 pl-6 py-1 rounded-r-full cursor-pointer hover:bg-gray-200 my-2 transition-all duration-200 ease-in-out">
+            <div key={Math.random()} className="flex items-center gap-4 pl-6 py-1 rounded-r-full cursor-pointer hover:bg-[#D3E3FD] my-2 transition-all duration-200 ease-in-out">
               {item.icon}
               <p>{item.text}</p>
             </div>

@@ -49,7 +49,7 @@ const DropDownMenu = () => {
         <div className="flex items-center">
           <button
             onClick={handleCheckboxClick}
-            className="px-1 rounded-sm border-none bg-transparent cursor-pointer py-1 hover:bg-gray-100 transition-all duration-1000 ease-in-out"
+            className="px-1 rounded-sm border-none bg-transparent cursor-pointer py-1 hover:bg-gray-100 transition-all duration-200 ease-in-out"
           >
             {/* <input
               type="checkbox"

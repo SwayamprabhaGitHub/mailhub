@@ -31,10 +31,10 @@ const Inbox = () => {
           <div className="flex items-center gap-1">
             <DropdownMenu />
           </div>
-          <div className="p-2 rounded-full hover:bg-gray-100 transition-all duration-1000 ease-in-out cursor-pointer hover:rotate-12">
+          <div className="p-2 rounded-full hover:bg-gray-100 transition-all duration-200 ease-in-out cursor-pointer hover:rotate-12">
             <IoMdRefresh size={"20px"} />
           </div>
-          <div className="p-2 rounded-full hover:bg-gray-100 transition-all duration-1000 ease-in-out cursor-pointer">
+          <div className="p-2 rounded-full hover:bg-gray-100 transition-all duration-200 ease-in-out cursor-pointer">
             <IoMdMore size={"20px"} />
           </div>
         </div>
