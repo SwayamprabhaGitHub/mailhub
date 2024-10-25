@@ -14,16 +14,16 @@ const SendMail = () => {
   const [subject, setSubject] = useState("");
   const [editorContent, setEditorContent] = useState("");
 
-  const stripHtml = (html) => {
-    const div = document.createElement("div");
-    div.innerHTML = html;
-    return div.textContent || div.innerText || "";
-  };
+  // const stripHtml = (html) => {
+  //   const div = document.createElement("div");
+  //   div.innerHTML = html;
+  //   return div.textContent || div.innerText || "";
+  // };
 
   const formData = {
     to: to,
     subject: subject,
-    message: stripHtml(editorContent),
+    message: editorContent,
   };
 
   const handleFormSubmit = async (event) => {

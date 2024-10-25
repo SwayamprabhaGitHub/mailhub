@@ -82,7 +82,7 @@ const Navbar = () => {
     <div className="flex items-center justify-between mx-3 h-16">
       <div className="flex items-center gap-10">
         <div className="flex items-center gap-6">
-          <div className="p-3 rounded-full hover:bg-gray-300 cursor-pointer transition-all duration-1000 ease-in-out">
+          <div className="p-3 rounded-full hover:bg-teal-100 cursor-pointer transition-all duration-1000 ease-in-out">
             <RxHamburgerMenu size={"20px"} />
           </div>
           <div className="flex items-center gap-2 cursor-pointer">
@@ -117,7 +117,7 @@ const Navbar = () => {
             {suggestions.map((suggestion) => (
               <li
                 key={suggestion.id}
-                className="flex flex-col px-4 py-3 hover:bg-blue-100 transition-colors duration-200 cursor-pointer"
+                className="flex flex-col px-4 py-3 hover:bg-teal-50 transition-colors duration-200 cursor-pointer"
                 onClick={() => handleSuggestionClick(suggestion)}
               >
                 <div className="flex justify-between items-center">
@@ -144,13 +144,13 @@ const Navbar = () => {
       </div>
       <div className="md:block hidden">
         <div className="flex items-center gap-2">
-          <div className="p-3 rounded-full hover:bg-gray-300 cursor-pointer transition-all duration-1000 ease-in-out">
+          <div className="p-3 rounded-full hover:bg-teal-100 cursor-pointer transition-all duration-1000 ease-in-out">
             <CiCircleQuestion size={"22px"} />
           </div>
-          <div className="p-3 rounded-full hover:bg-gray-300 cursor-pointer transition-all duration-1000 ease-in-out hover:rotate-90">
+          <div className="p-3 rounded-full hover:bg-teal-100 cursor-pointer transition-all duration-1000 ease-in-out hover:rotate-90">
             <IoSettingsOutline size={"22px"} />
           </div>
-          <div className="p-3 rounded-full hover:bg-gray-300 cursor-pointer transition-all duration-1000 ease-in-out">
+          <div className="p-3 rounded-full hover:bg-teal-100 cursor-pointer transition-all duration-1000 ease-in-out">
             <TbGridDots size={"22px"} />
           </div>
           <div className="cursor-pointer rounded-full hover:scale-110 bg-gray-400 transition-all duration-1000 ease-in-out">

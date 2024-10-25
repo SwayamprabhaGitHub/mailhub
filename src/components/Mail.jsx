@@ -48,7 +48,10 @@ const Mail = () => {
     { icon: <IoMdArrowBack size={"20px"} />, function: handleArrowBack },
     { icon: <BiArchiveIn size={"20px"} /> },
     { icon: <MdOutlineReport size={"20px"} /> },
-    { icon: <MdDeleteOutline size={"20px"} />, function:() => deleteMailById(params.id) },
+    {
+      icon: <MdDeleteOutline size={"20px"} />,
+      function: () => deleteMailById(params.id),
+    },
     { icon: <MdOutlineMarkEmailUnread size={"20px"} /> },
     { icon: <MdOutlineWatchLater size={"20px"} /> },
     { icon: <MdOutlineAddTask size={"20px"} /> },
@@ -95,8 +98,13 @@ const Mail = () => {
           <h1>{selectedEmail.to}</h1>
           <span>to me</span>
         </div>
-        <div className="my-10">
-          <p>{selectedEmail.message}</p>
+        <div className="my-10 custom-list">
+          <div
+            className="formatted-content"
+            dangerouslySetInnerHTML={{ __html: selectedEmail.message }}
+          ></div>
+
+          {/* <p>{selectedEmail.message}</p> */}
         </div>
       </div>
     </div>

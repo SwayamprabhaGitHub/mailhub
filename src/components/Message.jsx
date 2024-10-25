@@ -9,8 +9,15 @@ const Message = ({email}) => {
         navigate(`/inbox/${email.id}`);
     }
     console.log(email);
+
+    const stripHtml = (html) => {
+        const div = document.createElement("div");
+        div.innerHTML = html;
+        return div.textContent || div.innerText || "";
+      };
+
   return (
-    <div onClick={openMail} className="flex items-start justify-between border-b border-gray-200 px-4 py-2 text-sm cursor-pointer hover:shadow-md transition-all duration-200 ease-in-out">
+    <div onClick={openMail} className="flex items-start justify-between border-b border-gray-200 px-4 py-2 text-sm cursor-pointer hover:shadow-md hover:-translate-y-1 transition-all duration-300 ease-in-out">
         <div className="flex items-center gap-3">
             <div className="flex-none text-gray-300">
                 <MdCropSquare className="w-5 h-5" /> 
@@ -22,7 +29,7 @@ const Message = ({email}) => {
         </div>
         <div className="flex-1 ml-4 flex items-center">
             <p className="text-black font-bold w-64">{email?.to}</p>
-            <p className="text-gray-600 truncate inline-block w-[50rem]"><strong>{email?.subject}</strong>-{email?.message}</p>
+            <p className="text-gray-600 truncate inline-block w-[50rem]"><strong>{email?.subject}</strong>-{stripHtml(email?.message)}</p>
         </div>
         <div className="flex-none text-gray-400 text-sm">
             <p>{email?.createdAt}</p>
