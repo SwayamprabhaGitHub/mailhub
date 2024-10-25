@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { RxCross1 } from "react-icons/rx";
 import ComposeMail from "./ComposeMail";
 import { useDispatch, useSelector } from "react-redux";
-import { setOpen } from "../redux/appSlice";
+import { setOpen } from "../../redux/appSlice";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 
 const SendMail = () => {
   const open = useSelector((state) => state.appSlice.open);

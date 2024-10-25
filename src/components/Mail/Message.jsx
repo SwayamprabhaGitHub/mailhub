@@ -8,7 +8,6 @@ const Message = ({email}) => {
     const openMail = () => {
         navigate(`/inbox/${email.id}`);
     }
-    console.log(email);
 
     const stripHtml = (html) => {
         const div = document.createElement("div");

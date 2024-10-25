@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "./components/shared/Navbar";
+import Navbar from "./components/Layout/Navbar";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import Body from "./components/Body";
-import Inbox from "./components/Inbox";
-import Mail from "./components/Mail";
-import SendMail from "./components/SendMail";
+import Body from "./Pages/Body";
+import Inbox from "./Pages/Inbox";
+import Mail from "./Pages/Mail";
+import SendMail from "./components/ComposeMail/SendMail";
 import { useDispatch, useSelector } from "react-redux";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "./firebase";
 import { setEmails } from "./redux/appSlice";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
-import LoadingSpinner from "./components/LoadingSpinner";
+import LoadingSpinner from "./components/UI/LoadingSpinner";
 
 const router = createBrowserRouter([
   {
