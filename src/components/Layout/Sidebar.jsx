@@ -6,21 +6,24 @@ import { MdOutlineDrafts, MdOutlineKeyboardArrowDown, MdOutlineWatchLater } from
 import { TbSend2 } from "react-icons/tb";
 import { useDispatch } from "react-redux";
 import { setOpen } from "../../redux/appSlice";
+import { NavLink } from "react-router-dom";
+import { BsTrash } from "react-icons/bs";
 
 const sideBarItems = [
-  { icon: <BiSolidInbox size={"20px"} />, text: "Inbox" },
-  { icon: <IoMdStar size={"20px"} />, text: "Starred" },
-  { icon: <MdOutlineWatchLater size={"20px"} />, text: "Snoozed" },
-  { icon: <TbSend2 size={"20px"} />, text: "Sent" },
-  { icon: <MdOutlineDrafts size={"20px"} />, text: "Drafts" },
-  { icon: <MdOutlineKeyboardArrowDown size={"20px"} />, text: "More" }
+  { icon: <BiSolidInbox size={"20px"} />, text: "Inbox", to: "/inbox" },
+  { icon: <IoMdStar size={"20px"} />, text: "Starred", to: "/starred" },
+  { icon: <MdOutlineWatchLater size={"20px"} />, text: "Snoozed", to: "/snoozed" },
+  { icon: <TbSend2 size={"20px"} />, text: "Sent", to: "/sent" },
+  { icon: <MdOutlineDrafts size={"20px"} />, text: "Drafts", to: "/draft" },
+  { icon: <BsTrash size={"20px"} />, text: "Trash", to: "/trash" },
+  { icon: <MdOutlineKeyboardArrowDown size={"20px"} />, text: "More", to: "/more" }
 ];
 
 const Sidebar = () => {
   const dispatch = useDispatch();
 
   return (
-    <div className="w-[12%]">
+    <>
       <div className="p-3 pt-1">
         <button onClick={() => dispatch(setOpen(true))} className="flex items-center gap-2 p-4 rounded-2xl hover:shadow-md hover:scale-105 bg-[#C2E7FF] transition-all duration-200 ease-in-out active:scale-95">
           <LuPencil size={"20px"} />
@@ -30,14 +33,14 @@ const Sidebar = () => {
       <div className="text-gray-500">
         {sideBarItems.map((item, index) => {
           return (
-            <div key={Math.random()} className="flex items-center gap-4 pl-6 py-1 rounded-r-full cursor-pointer hover:bg-teal-100 my-2 transition-all duration-200 ease-in-out">
+            <NavLink to={item.to} key={Math.random()} className={({isActive}) => `${isActive ? "bg-rose-200" : "bg-teal-100"} flex items-center gap-4 pl-6 py-1 rounded-r-full cursor-pointer my-2 transition-all duration-200 ease-in-out`}>
               {item.icon}
               <p>{item.text}</p>
-            </div>
+            </NavLink>
           );
         })}
       </div>
-    </div>
+    </>
   );
 };
 

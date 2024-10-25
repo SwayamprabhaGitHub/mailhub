@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "./components/Layout/Navbar";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import {
+  Navigate,
+  RouterProvider,
+  createBrowserRouter,
+} from "react-router-dom";
 import Body from "./Pages/Body";
 import Inbox from "./Pages/Inbox";
 import Mail from "./Pages/Mail";
@@ -12,22 +16,84 @@ import { setEmails } from "./redux/appSlice";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 import LoadingSpinner from "./components/UI/LoadingSpinner";
+import Starred from "./Pages/Starred";
+import Snoozed from "./Pages/Snoozed";
+import Sent from "./Pages/Sent";
+import Draft from "./Pages/Draft";
+import Trash from "./Pages/Trash";
+import SignUp from "./Pages/SignUp";
+import LogIn from "./Pages/LogIn";
+import ForgotPassword from "./Pages/ForgotPassword";
 
-const router = createBrowserRouter([
-  {
-    path: "/inbox",
-    element: <Body />,
-    children: [
-      { path: "/inbox", element: <Inbox />, index: true },
-      { path: "/inbox/:id", element: <Mail /> },
-    ],
-  },
-]);
+const createRouter = (signedIn) =>
+  createBrowserRouter([
+    {
+      path: "/",
+      element: !signedIn ? <LogIn /> : <Navigate to="/inbox" />,
+    },
+    {
+      path: "/signup",
+      element: !signedIn ? <SignUp /> : <Navigate to="/inbox" />,
+    },
+    {
+      path: "/forgotpassword",
+      element: !signedIn ? <ForgotPassword /> : <Navigate to="/inbox" />,
+    },
+    {
+      path: "/inbox",
+      element: <Body />,
+      children: [
+        { path: "/inbox", element: signedIn ? <Inbox /> : <Navigate to="/" /> },
+        { path: "/inbox/:id", element: signedIn ? <Mail /> : <Navigate to="/" /> },
+      ],
+    },
+    {
+      path: "/starred",
+      element: <Body />,
+      children: [
+        { path: "/starred", element: signedIn ? <Starred /> : <Navigate to="/" /> },
+        { path: "/starred/:id", element: signedIn ? <Mail /> : <Navigate to="/" /> },
+      ],
+    },
+    {
+      path: "/snoozed",
+      element: <Body />,
+      children: [
+        { path: "/snoozed", element: signedIn ? <Snoozed /> : <Navigate to="/" /> },
+        { path: "/snoozed/:id", element: signedIn ? <Mail /> : <Navigate to="/" /> },
+      ],
+    },
+    {
+      path: "/sent",
+      element: <Body />,
+      children: [
+        { path: "/sent", element: signedIn ? <Sent /> : <Navigate to="/" /> },
+        { path: "/sent/:id", element: signedIn ? <Mail /> : <Navigate to="/" /> },
+      ],
+    },
+    {
+      path: "/draft",
+      element: <Body />,
+      children: [
+        { path: "/draft", element: signedIn ? <Draft /> : <Navigate to="/" /> },
+        { path: "/draft/:id", element: signedIn ? <Mail /> : <Navigate to="/" /> },
+      ],
+    },
+    {
+      path: "/trash",
+      element: <Body />,
+      children: [
+        { path: "/trash", element: signedIn ? <Trash /> : <Navigate to="/" /> },
+        { path: "/trash/:id", element: signedIn ? <Mail /> : <Navigate to="/" /> },
+      ],
+    },
+  ]);
 
 function App() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true); //loading state
-  const emails = useSelector((state) => state.appSlice.emails);
+  // const emails = useSelector((state) => state.appSlice.emails);
+  const signedIn = useSelector((state) => state.appSlice.signedIn);
 
   useEffect(() => {
     const q = query(collection(db, "emails"), orderBy("createdAt", "desc"));
@@ -61,9 +127,11 @@ function App() {
     }
   }, [loading]);
 
+  const router = createRouter(signedIn);
+
   return (
     <div className="bg-teal-50 h-screen w-screen overflow-hidden">
-      <Navbar />
+      {signedIn && <Navbar />}
       {loading ? <LoadingSpinner /> : <RouterProvider router={router} />}
 
       <div className="absolute w-[30%] bottom-0 right-20 z-10">
