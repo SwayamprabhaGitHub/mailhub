@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "./components/Layout/Navbar";
 import {
   Navigate,
   RouterProvider,
@@ -24,6 +23,11 @@ import Trash from "./Pages/Trash";
 import SignUp from "./Pages/SignUp";
 import LogIn from "./Pages/LogIn";
 import ForgotPassword from "./Pages/ForgotPassword";
+import UserProfile from "./Pages/UserProfile";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+
 
 const createRouter = (signedIn) =>
   createBrowserRouter([
@@ -40,27 +44,46 @@ const createRouter = (signedIn) =>
       element: !signedIn ? <ForgotPassword /> : <Navigate to="/inbox" />,
     },
     {
+      path: "/userprofile",
+      element: signedIn ? <UserProfile /> : <Navigate to="/" />,
+    },
+    {
       path: "/inbox",
       element: <Body />,
       children: [
         { path: "/inbox", element: signedIn ? <Inbox /> : <Navigate to="/" /> },
-        { path: "/inbox/:id", element: signedIn ? <Mail /> : <Navigate to="/" /> },
+        {
+          path: "/inbox/:id",
+          element: signedIn ? <Mail /> : <Navigate to="/" />,
+        },
       ],
     },
     {
       path: "/starred",
       element: <Body />,
       children: [
-        { path: "/starred", element: signedIn ? <Starred /> : <Navigate to="/" /> },
-        { path: "/starred/:id", element: signedIn ? <Mail /> : <Navigate to="/" /> },
+        {
+          path: "/starred",
+          element: signedIn ? <Starred /> : <Navigate to="/" />,
+        },
+        {
+          path: "/starred/:id",
+          element: signedIn ? <Mail /> : <Navigate to="/" />,
+        },
       ],
     },
     {
       path: "/snoozed",
       element: <Body />,
       children: [
-        { path: "/snoozed", element: signedIn ? <Snoozed /> : <Navigate to="/" /> },
-        { path: "/snoozed/:id", element: signedIn ? <Mail /> : <Navigate to="/" /> },
+        {
+          path: "/snoozed",
+          element: signedIn ? <Snoozed /> : <Navigate to="/" />,
+        },
+        {
+          path: "/snoozed/:id",
+          element: signedIn ? <Mail /> : <Navigate to="/" />,
+        },
       ],
     },
     {
@@ -68,7 +91,10 @@ const createRouter = (signedIn) =>
       element: <Body />,
       children: [
         { path: "/sent", element: signedIn ? <Sent /> : <Navigate to="/" /> },
-        { path: "/sent/:id", element: signedIn ? <Mail /> : <Navigate to="/" /> },
+        {
+          path: "/sent/:id",
+          element: signedIn ? <Mail /> : <Navigate to="/" />,
+        },
       ],
     },
     {
@@ -76,7 +102,10 @@ const createRouter = (signedIn) =>
       element: <Body />,
       children: [
         { path: "/draft", element: signedIn ? <Draft /> : <Navigate to="/" /> },
-        { path: "/draft/:id", element: signedIn ? <Mail /> : <Navigate to="/" /> },
+        {
+          path: "/draft/:id",
+          element: signedIn ? <Mail /> : <Navigate to="/" />,
+        },
       ],
     },
     {
@@ -84,7 +113,10 @@ const createRouter = (signedIn) =>
       element: <Body />,
       children: [
         { path: "/trash", element: signedIn ? <Trash /> : <Navigate to="/" /> },
-        { path: "/trash/:id", element: signedIn ? <Mail /> : <Navigate to="/" /> },
+        {
+          path: "/trash/:id",
+          element: signedIn ? <Mail /> : <Navigate to="/" />,
+        },
       ],
     },
   ]);
@@ -94,6 +126,9 @@ function App() {
   const [loading, setLoading] = useState(true); //loading state
   // const emails = useSelector((state) => state.appSlice.emails);
   const signedIn = useSelector((state) => state.appSlice.signedIn);
+  const user = useSelector((state) => state.appSlice.user);
+  const profilePopup = useSelector((state) => state.appSlice.profilePopup);
+
 
   useEffect(() => {
     const q = query(collection(db, "emails"), orderBy("createdAt", "desc"));
@@ -127,17 +162,16 @@ function App() {
     }
   }, [loading]);
 
-  const router = createRouter(signedIn);
+  const router = createRouter(user);
 
   return (
-    <div className="bg-teal-50 h-screen w-screen overflow-hidden">
-      {signedIn && <Navbar />}
+    <>
+    <ToastContainer />
       {loading ? <LoadingSpinner /> : <RouterProvider router={router} />}
-
       <div className="absolute w-[30%] bottom-0 right-20 z-10">
         <SendMail />
       </div>
-    </div>
+    </>
   );
 }
 

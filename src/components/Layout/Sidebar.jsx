@@ -33,7 +33,7 @@ const Sidebar = () => {
       <div className="text-gray-500">
         {sideBarItems.map((item, index) => {
           return (
-            <NavLink to={item.to} key={Math.random()} className={({isActive}) => `${isActive ? "bg-rose-200" : "bg-teal-100"} flex items-center gap-4 pl-6 py-1 rounded-r-full cursor-pointer my-2 transition-all duration-200 ease-in-out`}>
+            <NavLink to={item.to} key={Math.random()} className={({isActive}) => `${isActive ? "bg-rose-300/50" : "hover:bg-teal-300/30"} flex items-center gap-4 pl-6 py-1 rounded-r-full cursor-pointer my-2 transition-all duration-200 ease-in-out`}>
               {item.icon}
               <p>{item.text}</p>
             </NavLink>
