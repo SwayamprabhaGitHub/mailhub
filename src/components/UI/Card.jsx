@@ -3,7 +3,7 @@ import React from "react";
 const Card = ({ children, className }) => {
     console.log("card")
   return (
-    <div className="min-h-screen w-full relative flex items-center justify-center bg-slate-100">
+    <div className={`min-h-screen w-full relative flex items-center justify-center bg-slate-100 ${className}`}>
       {/* Animated background patterns */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Geometric patterns */}
