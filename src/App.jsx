@@ -29,6 +29,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 
 
+
 const createRouter = (signedIn) =>
   createBrowserRouter([
     {
@@ -128,8 +129,7 @@ function App() {
   const signedIn = useSelector((state) => state.appSlice.signedIn);
   const user = useSelector((state) => state.appSlice.user);
   const profilePopup = useSelector((state) => state.appSlice.profilePopup);
-
-
+  
   useEffect(() => {
     const q = query(collection(db, "emails"), orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(q, (snapshot) => {

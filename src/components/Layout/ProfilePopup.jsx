@@ -5,6 +5,7 @@ const ProfilePopup = ({ isOpen, onClose, onLogout, onProfile }) => {
   if (!isOpen) return null;
 
   return (
+    //e.stopPropagation() prevents the event from bubbling up to parent elements. This means that any other event listeners on parent elements won't be triggered.
     <div 
       className="absolute right-4 top-16 z-50 w-80"
       onClick={e => e.stopPropagation()}

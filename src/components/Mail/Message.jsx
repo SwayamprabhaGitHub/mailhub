@@ -1,5 +1,5 @@
 import React from "react";
-import { MdCropSquare } from "react-icons/md";
+import { MdCropSquare, MdLabelImportantOutline } from "react-icons/md";
 import { RiStarLine } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 
@@ -24,6 +24,9 @@ const Message = ({email}) => {
             </div>
             <div className="flex-none text-gray-300">
                 <RiStarLine className="w-5 h-5" />
+            </div>
+            <div className="flex-none text-gray-300">
+                <MdLabelImportantOutline className="w-5 h-5" />
             </div>
         </div>
         <div className="flex-1 ml-4 flex items-center">

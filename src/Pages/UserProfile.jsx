@@ -75,7 +75,7 @@ const UserProfile = () => {
 
   return (
     <Card>
-      <div className="w-full max-w-3xl h-[95vh] p-8 mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+      <div className="w-full max-w-3xl p-8 mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
         <div className="relative">
           {/* Decorative background */}
           <div className="absolute inset-0 bg-gradient-to-br from-teal-50 to-rose-50 opacity-50 rounded-xl " />
@@ -113,7 +113,7 @@ const UserProfile = () => {
                 <div className="relative flex flex-col items-center mb-8">
                   <div className="w-30 h-30 rounded-full border-4 border-white shadow-xl overflow-hidden mb-2 bg-gradient-to-br from-teal-100 to-rose-100">
                     <img
-                      src={user.photoURL || "/api/placeholder/128/128"}
+                      src={user?.photoURL || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7oMra0QkSp_Z-gShMOcCIiDF5gc_0VKDKDg&s"}
                       alt="Profile"
                       className="w-full h-full object-cover"
                     />

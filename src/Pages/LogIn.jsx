@@ -1,12 +1,14 @@
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { Camera } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, provider } from "../firebase";
 import { useDispatch } from "react-redux";
 import { setUser } from "../redux/appSlice";
 import { toast } from "react-toastify";
 import Card from "../components/UI/Card";
+import { BiLoader } from "react-icons/bi";
+import { useCurrentUser } from "../components/hooks/useCurrentUser";
 
 const LogIn = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -30,23 +32,12 @@ const LogIn = () => {
 
       //The signed-in user info.
       const user = result.user;
-      const createdAtTimeStamp = Number(user.metadata.createdAt);
-      const lastLoginAtTimeStamp = Number(user.metadata.lastLoginAt);
-      const loggedInUser = {
-        displayName: user.displayName,
-        email: user.email,
-        emailVerified: user.emailVerified,
-        phoneNumber: user.phoneNumber,
-        photoURL: user.photoURL,
-        token: user.accessToken,
-        id: user.uid,
-        createdAt: new Date(createdAtTimeStamp).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
-        lastLoginAt: new Date(lastLoginAtTimeStamp).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
-      }
+      console.log(user);
+      const loggedInUser = useCurrentUser(user);
 
       toast.success("User Authenticated!");
       dispatch(setUser(loggedInUser));
-      console.log(user, loggedInUser);
+      // console.log(user, loggedInUser);
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
@@ -57,6 +48,16 @@ const LogIn = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    const user = auth.currentUser;
+
+    if(user) {
+      const loggedInUser = useCurrentUser(user);
+      dispatch(setUser(loggedInUser));
+      toast.success("Welcome back! You are already logged in.")
+    }
+  },[])
 
   return (
     <Card>
@@ -76,10 +77,11 @@ const LogIn = () => {
         <div className="mb-6">
           <button
             onClick={signInWithGoogle}
-            className="w-full flex items-center justify-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400/50 transition-colors duration-200"
+            className="w-full flex items-center justify-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400/50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Camera />
-            Continue with Google
+            {isLoading ? (<><BiLoader className="w-5 h-5 animate-spin mr-2"/>Loading...</>):<><Camera />
+            Continue with Google</>}
+            
           </button>
         </div>
 
@@ -139,14 +141,16 @@ const LogIn = () => {
           <div className="flex flex-col space-y-4 animate-slideIn">
             <button
               type="submit"
-              className="w-full px-4 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-teal-400 to-rose-400 hover:from-teal-300 hover:to-rose-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400/50 shadow-md transition-all duration-200"
+              disabled={isLoading}
+              className="w-full px-4 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-teal-400 to-rose-400 hover:from-teal-300 hover:to-rose-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400/50 shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
-              Sign in
+              {isLoading ? (<><BiLoader className="w-5 h-5 animate-spin mr-2"/>Loading...</>):"Sign in"}
             </button>
             <button
               type="button"
+              disabled={isLoading}
               onClick={() => navigate("/signup")}
-              className="w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:text-white bg-white hover:bg-gradient-to-r hover:from-rose-400 hover:to-teal-400 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400/50 transition-all duration-200"
+              className="w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:text-white bg-white hover:bg-gradient-to-r hover:from-rose-400 hover:to-teal-400 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Create an account
             </button>

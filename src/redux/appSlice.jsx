@@ -19,8 +19,9 @@ const appSlice = createSlice({
     setUser: (state, action) => {
       state.user = action.payload;
     },
+    
   },
 });
 
-export const { setOpen, setEmails, setSearchText, setShowSidebar, setUser } = appSlice.actions;
+export const { setOpen, setEmails, setSearchText, setShowSidebar, setUser, } = appSlice.actions;
 export default appSlice.reducer;

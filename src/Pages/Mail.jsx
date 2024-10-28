@@ -1,5 +1,5 @@
 import { deleteDoc, doc } from "firebase/firestore";
-import React from "react";
+import React, { useEffect } from "react";
 import { BiArchiveIn } from "react-icons/bi";
 import { IoMdArrowBack, IoMdMore } from "react-icons/io";
 import {
@@ -30,16 +30,19 @@ const Mail = () => {
   const deleteMailById = async (id) => {
     try {
       await deleteDoc(doc(db, "emails", id));
+      navigate("/inbox"); // Navigate after successful deletion
     } catch (error) {
       console.log(error);
     }
   };
 
-  if (!selectedEmail) {
-    // If the selected email does not exist, navigate to inbox
-    navigate("/inbox");
-    return null; // Prevent rendering the rest of the component
-  }
+  useEffect(() => {
+    if (!selectedEmail) {
+      // If the selected email does not exist, navigate to inbox
+      navigate("/inbox");
+    }
+  },[selectedEmail,navigate])
+
 
   const handleArrowBack = () => {
     navigate("/inbox");
@@ -58,6 +61,10 @@ const Mail = () => {
     { icon: <MdOutlineDriveFileMove size={"20px"} /> },
     { icon: <IoMdMore size={"20px"} /> },
   ];
+
+  if(!selectedEmail) {
+    return null
+  }
 
   return (
     <div className="flex-1 bg-white/70 rounded-xl mx-5">
