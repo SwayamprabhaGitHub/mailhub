@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../../src/redux/appSlice";
+import { IoMdArrowBack } from "react-icons/io";
 import { toast } from "react-toastify";
 import {
   CheckCircle,
@@ -13,10 +14,12 @@ import {
   Clock,
 } from "lucide-react";
 import Card from "../components/UI/Card";
+import { useNavigate } from "react-router-dom";
 
 const UserProfile = () => {
   const user = useSelector((state) => state.appSlice.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     displayName: user?.displayName || "",
@@ -79,9 +82,9 @@ const UserProfile = () => {
         <div className="relative">
           {/* Decorative background */}
           <div className="absolute inset-0 bg-gradient-to-br from-teal-50 to-rose-50 opacity-50 rounded-xl " />
-
           {user ? (
             <div className="relative text-center mb-8 p-6">
+              <div onClick={() => navigate("/inbox")} className="absolute p-3 rounded-full hover:bg-teal-300/30 cursor-pointer transition-all duration-300"><IoMdArrowBack size={"20px"} /></div>
               <h2 className="text-4xl font-bold text-gray-800 mb-3">
                 User Profile
               </h2>

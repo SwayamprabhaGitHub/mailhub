@@ -92,7 +92,7 @@ const LogIn = () => {
         </div>
 
         <form onSubmit={handleLoginSubmit} className="space-y-6">
-          <div className="relative animate-slideIn">
+          <div className="relative animate-slideIn [animation-delay-400ms] opacity-0">
             <input
               id="email"
               type="email"
@@ -110,7 +110,7 @@ const LogIn = () => {
             </label>
           </div>
 
-          <div className="relative animate-slideIn">
+          <div className="relative animate-slideIn [animation-delay-800ms] opacity-0">
             <input
               id="password"
               type="password"
