@@ -8,7 +8,7 @@
 }
 
 .ql-container {
-  @apply min-h-[300px];
+  @apply min-h-[300px] max-w-[520px];
 }
 
 .ql-editor {
