@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setOpen } from "../../redux/appSlice";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebase";
+import { toast } from "react-toastify";
 
 const SendMail = () => {
   const open = useSelector((state) => state.appSlice.open);
@@ -28,6 +29,9 @@ const SendMail = () => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+    if(to === "") {
+      return toast.error("To is required");
+    }
     await addDoc(collection(db, "emails"), {
       to: formData.to,
       subject: formData.subject,

@@ -1,4 +1,4 @@
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { Camera } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -17,10 +17,6 @@ const LogIn = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const handleLoginSubmit = (event) => {
-    event.preventDefault();
-  };
 
   const signInWithGoogle = async () => {
     setIsLoading(true);
@@ -49,13 +45,29 @@ const LogIn = () => {
     }
   };
 
+  const signInWithMailhub = async(event) => {
+    event.preventDefault();
+    setIsLoading(true);
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      console.log(userCredential.user);
+      const loggedInUser = useCurrentUser(userCredential.user);
+      dispatch(setUser(loggedInUser));
+      toast.success("Welcome to Mailhub!");
+    } catch(error) {
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   useEffect(() => {
     const user = auth.currentUser;
 
     if(user) {
       const loggedInUser = useCurrentUser(user);
       dispatch(setUser(loggedInUser));
-      toast.success("Welcome back! You are already logged in.")
+      toast.success("Welcome back to Mail hub! You are already logged in.")
     }
   },[])
 
@@ -91,7 +103,7 @@ const LogIn = () => {
           <div className="border-t border-gray-300 w-full"></div>
         </div>
 
-        <form onSubmit={handleLoginSubmit} className="space-y-6">
+        <form onSubmit={signInWithMailhub} className="space-y-6">
           <div className="relative animate-slideIn [animation-delay-400ms] opacity-0">
             <input
               id="email"

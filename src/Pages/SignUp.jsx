@@ -2,16 +2,23 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "../components/UI/Card";
 import { BiLoader } from "react-icons/bi";
+import { toast } from "react-toastify";
+import { auth } from "../firebase";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { useCurrentUser } from "../components/hooks/useCurrentUser";
+import { setUser } from "../redux/appSlice";
+import { useDispatch } from "react-redux";
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [isLoading, setIsLoading] = useState("");
-  const [isEmailTouched, setIsEmailTouched] = useState(false); //for checking email ends with @mailhub.com
+  const [isEmailTouched, setIsEmailTouched] = useState(false); //for checking email includes @
   const [isConfirmPswrdTouched, setIsConfirmPswrdTouched] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
 
@@ -24,10 +31,37 @@ const SignUp = () => {
       setIsConfirmPswrdTouched(true);
     }
   }
-  
+
+  const handleSignUpSubmit = async(event) => {
+    event.preventDefault();
+    setIsLoading(true);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      //updating user profile with name
+      await updateProfile(user, {displayName: fullName});
+      console.log(user);
+      //updating the redux
+      const loggedInUser = useCurrentUser(user);
+      dispatch(setUser(loggedInUser));
+      toast.success("Account created successfully! You are logged in now.");
+      //empty input fields
+      setFullName("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+    } catch(error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      toast.error(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     // Update form validity status
-    const isEmailValid = email.endsWith("@mailhub.com");
+    const isEmailValid = email.includes("@");
     const isPasswordValid = password.length >= 6;
     const arePasswordsMatching = password === confirmPassword;
     const isFullNameValid = fullName.trim().length > 0;
@@ -36,16 +70,6 @@ const SignUp = () => {
       isEmailValid && isPasswordValid && arePasswordsMatching && isFullNameValid
     );
   }, [email, password, confirmPassword, fullName]);
-
-  const handleSignUpSubmit = (event) => {
-    event.preventDefault();
-    if (email.endsWith("@mailhub.com")) {
-      // Submit the form or perform any desired action
-      console.log("Email submitted:", email);
-    } else {
-      console.log("Invalid email format");
-    }
-  };
 
   return (
     <Card>
@@ -86,18 +110,18 @@ const SignUp = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               onBlur={handleEmailBlur}
-              className={`block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:outline-none focus:ring-0 focus:border-teal-400 peer ${isEmailTouched && !email.endsWith("@mailhub.com") && "border-rose-600 focus:border-rose-600"}`}
+              className={`block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:outline-none focus:ring-0 focus:border-teal-400 peer ${isEmailTouched && !email.includes("@") && "border-rose-600 focus:border-rose-600"}`}
               placeholder=" "
               required
-              pattern="^[a-zA-Z0-9._%+-]+@mailhub\.com$" // Pattern to validate email ending with @mailhub.com
+              pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" // Pattern to validate email including @
             />
             <label
               htmlFor="email"
-              className={`absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-teal-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1 ${isEmailTouched && !email.endsWith("@mailhub.com") && "text-rose-600 peer-focus:text-rose-600 peer-placeholder-shown:top-6"}`}
+              className={`absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-teal-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1 ${isEmailTouched && !email.includes("@") && "text-rose-600 peer-focus:text-rose-600 peer-placeholder-shown:top-6"}`}
             >
               Email
             </label>
-            {isEmailTouched && !email.endsWith("@mailhub.com") && (<p className="text-rose-600 text-sm px-2">Email must end with @mailhub.com</p>)}
+            {isEmailTouched && !email.includes("@") && (<p className="text-rose-600 text-sm px-2">Email must include @</p>)}
           </div>
 
           <div className="relative animate-slideIn [animation-delay-1200ms] opacity-0">

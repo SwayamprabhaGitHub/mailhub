@@ -68,7 +68,7 @@ const DropDownMenu = () => {
         </div>
       </div>
       {isOpen && (
-        <div className="absolute mt-2 w-36 rounded-lg shadow-xl bg-white ring-2 ring-black ring-opacity-5">
+        <div className="absolute mt-2 w-36 rounded-lg shadow-xl bg-white ring-2 ring-black ring-opacity-5 z-30">
           <div className="py-1">
             {["All", "None", "Read", "UnRead", "Starred", "Unstarred"].map(
               (option) => {

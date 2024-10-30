@@ -1,14 +1,28 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "../components/UI/Card";
+import { toast } from "react-toastify";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "../firebase";
+import { BiLoader } from "react-icons/bi";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [email, setEmail] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleForgotPassword = async(event) => {
     event.preventDefault();
+    setIsLoading(true);
+    try {
+      await sendPasswordResetEmail(auth, email);
+      toast.success("Password reset email sent successfully");
+    } catch(error) {
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -25,7 +39,7 @@ const ForgotPassword = () => {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleForgotPassword} className="space-y-6">
           <div className="relative animate-slideIn">
             <input
               id="email"
@@ -47,9 +61,9 @@ const ForgotPassword = () => {
           <div className="flex flex-col space-y-4 animate-slideIn">
             <button
               type="submit"
-              className="w-full px-4 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-teal-400 to-rose-400 hover:from-teal-300 hover:to-rose-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400/50 shadow-md transition-all duration-200"
+              className="w-full px-4 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-teal-400 to-rose-400 hover:from-teal-300 hover:to-rose-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400/50 shadow-md transition-all duration-200 flex items-center justify-center"
             >
-              Send Reset Instructions
+              {isLoading ? (<><BiLoader className="w-5 h-5 animate-spin mr-2"/>Loading...</>):"Send Reset Instructions"}
             </button>
           </div>
         </form>
