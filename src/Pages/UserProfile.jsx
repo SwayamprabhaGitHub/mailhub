@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setUser } from "../../src/redux/appSlice";
+import { setProfile, setUser } from "../../src/redux/appSlice";
 import { IoMdArrowBack } from "react-icons/io";
 import { toast } from "react-toastify";
 import {
@@ -15,25 +15,43 @@ import {
 } from "lucide-react";
 import Card from "../components/UI/Card";
 import { useNavigate } from "react-router-dom";
+import { sendEmailVerification, updateProfile } from "firebase/auth";
+import { auth, db } from "../firebase";
+import { useCurrentUser } from "../components/hooks/useCurrentUser";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
 
 const UserProfile = () => {
   const user = useSelector((state) => state.appSlice.user);
+  const profile = useSelector((state) => state.appSlice.profile);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    displayName: user?.displayName || "",
-    phoneNumber: user?.phoneNumber || "",
-    photoURL: user?.photoURL || "",
+    displayName: profile?.displayName || "",
+    phoneNumber: profile?.phoneNumber || "",
+    photoURL: profile?.photoURL || "",
   });
 
   const [isEditing, setIsEditing] = useState({
-    displayName: !user?.displayName,
-    phoneNumber: !user?.phoneNumber,
-    photoURL: !user?.photoURL,
+    displayName: !profile?.displayName,
+    phoneNumber: !profile?.phoneNumber,
+    photoURL: !profile?.photoURL,
   });
 
-  console.log(isEditing);
+  const handleVerifyEmail = async () => {
+    //implement email verification logic here
+    try {
+      await sendEmailVerification(auth.currentUser);
+      toast.success(
+        `Verification email sent to ${profile.email}! Please check your inbox.`
+      );
+      const updatedUser = useCurrentUser(auth.currentUser);
+      dispatch(setUser(updatedUser));
+      dispatch(setProfile(updatedUser));
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,14 +61,30 @@ const UserProfile = () => {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleProfileSubmit = async (event) => {
     event.preventDefault();
-    const updatedUser = {
-      ...user,
-      ...formData,
-    };
-    dispatch(setUser(updatedUser));
-    toast.success("Profile updated successfully!");
+    // const updatedUser = {
+    //   ...user,
+    //   ...formData,
+    // };
+    try {
+      await updateProfile(auth.currentUser, {
+        displayName: formData?.displayName,
+        // phoneNumber: formData?.phoneNumber,
+        photoURL: formData?.photoURL,
+      });
+      const updatedUser = useCurrentUser(auth.currentUser);
+      // if(formData?.phoneNumber) {
+        await updateDoc(doc(db, profile.email, profile.email), {phoneNumber: formData?.phoneNumber, displayName: formData?.displayName, photoURL: formData?.photoURL});
+      // } else {
+      //   await setDoc(doc(db, profile.email, profile.email), {...updatedUser});
+      // }
+      dispatch(setUser(updatedUser));
+      dispatch(setProfile(updatedUser));
+      toast.success("Profile updated Successfully.");
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   const getInputClass = (isEditable) => `
@@ -68,9 +102,11 @@ const UserProfile = () => {
       type="button"
       onClick={onClick}
       className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 flex items-center gap-1
-        ${isEditing 
-          ? 'text-rose-600 hover:text-rose-700 hover:bg-rose-50' 
-          : 'text-teal-600 hover:text-teal-700 hover:bg-teal-50'}`}
+        ${
+          isEditing
+            ? "text-rose-600 hover:text-rose-700 hover:bg-rose-50"
+            : "text-teal-600 hover:text-teal-700 hover:bg-teal-50"
+        }`}
     >
       {isEditing ? "Cancel" : "Edit"}
     </button>
@@ -82,9 +118,14 @@ const UserProfile = () => {
         <div className="relative">
           {/* Decorative background */}
           <div className="absolute inset-0 bg-gradient-to-br from-teal-50 to-rose-50 opacity-50 rounded-xl " />
-          {user ? (
+          {profile ? (
             <div className="relative text-center mb-8 p-6">
-              <div onClick={() => navigate("/inbox")} className="absolute p-3 rounded-full hover:bg-teal-300/30 cursor-pointer transition-all duration-300"><IoMdArrowBack size={"20px"} /></div>
+              <div
+                onClick={() => navigate("/inbox")}
+                className="absolute p-3 rounded-full hover:bg-teal-300/30 cursor-pointer transition-all duration-300"
+              >
+                <IoMdArrowBack size={"20px"} />
+              </div>
               <h2 className="text-4xl font-bold text-gray-800 mb-3">
                 User Profile
               </h2>
@@ -92,13 +133,14 @@ const UserProfile = () => {
 
               {/* Email Verification Status */}
               <div
+                onClick={!profile.emailVerified ? handleVerifyEmail : null} //only adds onClick when email is not verified
                 className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm mb-3 font-medium ${
-                  user.emailVerified
+                  profile.emailVerified
                     ? "bg-teal-50 text-teal-600"
-                    : "bg-rose-50 text-rose-700"
+                    : "bg-rose-50 text-rose-700 cursor-pointer hover:shadow-lg hover:scale-102 hover:bg-rose-300/40 transition-all duration-200 ease-in-out active:scale-95"
                 }`}
               >
-                {user.emailVerified ? (
+                {profile.emailVerified ? (
                   <>
                     <CheckCircle className="w-4 h-4 mr-1.5" />
                     Email Verified
@@ -111,19 +153,22 @@ const UserProfile = () => {
                 )}
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleProfileSubmit} className="space-y-6">
                 {/* Profile Display Section */}
                 <div className="relative flex flex-col items-center mb-8">
                   <div className="w-30 h-30 rounded-full border-4 border-white shadow-xl overflow-hidden mb-2 bg-gradient-to-br from-teal-100 to-rose-100">
                     <img
-                      src={user?.photoURL || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7oMra0QkSp_Z-gShMOcCIiDF5gc_0VKDKDg&s"}
+                      src={
+                        profile?.photoURL ||
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7oMra0QkSp_Z-gShMOcCIiDF5gc_0VKDKDg&s"
+                      }
                       alt="Profile"
                       className="w-full h-full object-cover"
                     />
                   </div>
                   <div className="flex items-center mt-2">
                     <h3 className="text-xl font-semibold text-gray-700">
-                      {user.email}
+                      {profile.email}
                     </h3>
                   </div>
                 </div>
@@ -218,7 +263,7 @@ const UserProfile = () => {
                         Account Created
                       </label>
                       <div className="text-gray-600 text-left">
-                        {user.createdAt}
+                        {profile.createdAt}
                       </div>
                     </div>
                     <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
@@ -227,7 +272,7 @@ const UserProfile = () => {
                         Last Login
                       </label>
                       <div className="text-gray-600 text-left">
-                        {user.lastLoginAt}
+                        {profile.lastLoginAt}
                       </div>
                     </div>
                   </div>

@@ -3,11 +3,12 @@ import { useNavigate } from "react-router-dom";
 import Card from "../components/UI/Card";
 import { BiLoader } from "react-icons/bi";
 import { toast } from "react-toastify";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useCurrentUser } from "../components/hooks/useCurrentUser";
-import { setUser } from "../redux/appSlice";
+import { setProfile, setUser } from "../redux/appSlice";
 import { useDispatch } from "react-redux";
+import { doc, setDoc } from "firebase/firestore";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -32,6 +33,14 @@ const SignUp = () => {
     }
   }
 
+  const createDoc = async(loggedInUser, email) => {
+    try {
+      await setDoc(doc(db, email, email), {...loggedInUser});
+    } catch(error) {
+      console.log(error.message);
+    }
+  }
+
   const handleSignUpSubmit = async(event) => {
     event.preventDefault();
     setIsLoading(true);
@@ -43,7 +52,9 @@ const SignUp = () => {
       console.log(user);
       //updating the redux
       const loggedInUser = useCurrentUser(user);
+      createDoc(loggedInUser, email);
       dispatch(setUser(loggedInUser));
+      dispatch(setProfile(loggedInUser));
       toast.success("Account created successfully! You are logged in now.");
       //empty input fields
       setFullName("");

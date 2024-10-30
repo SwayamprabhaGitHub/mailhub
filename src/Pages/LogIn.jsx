@@ -1,14 +1,19 @@
-import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import {
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
 import { Camera } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth, provider } from "../firebase";
+import { auth, db, provider } from "../firebase";
 import { useDispatch } from "react-redux";
-import { setUser } from "../redux/appSlice";
+import { setProfile, setUser } from "../redux/appSlice";
 import { toast } from "react-toastify";
 import Card from "../components/UI/Card";
 import { BiLoader } from "react-icons/bi";
 import { useCurrentUser } from "../components/hooks/useCurrentUser";
+import { doc, onSnapshot, setDoc } from "firebase/firestore";
 
 const LogIn = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -17,6 +22,15 @@ const LogIn = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  //updating profile in firebase
+  const createDoc = async (loggedInUser, email) => {
+    try {
+      await setDoc(doc(db, email, email), { ...loggedInUser });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   const signInWithGoogle = async () => {
     setIsLoading(true);
@@ -33,6 +47,8 @@ const LogIn = () => {
 
       toast.success("User Authenticated!");
       dispatch(setUser(loggedInUser));
+      dispatch(setProfile(loggedInUser));
+      createDoc(loggedInUser, email);
       // console.log(user, loggedInUser);
     } catch (error) {
       const errorCode = error.code;
@@ -45,31 +61,48 @@ const LogIn = () => {
     }
   };
 
-  const signInWithMailhub = async(event) => {
+  const signInWithMailhub = async (event) => {
     event.preventDefault();
     setIsLoading(true);
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       console.log(userCredential.user);
       const loggedInUser = useCurrentUser(userCredential.user);
       dispatch(setUser(loggedInUser));
+      dispatch(setProfile(loggedInUser));
+      createDoc(loggedInUser, email);
       toast.success("Welcome to Mailhub!");
-    } catch(error) {
+    } catch (error) {
       toast.error(error.message);
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     const user = auth.currentUser;
 
-    if(user) {
+    if (user) {
       const loggedInUser = useCurrentUser(user);
       dispatch(setUser(loggedInUser));
-      toast.success("Welcome back to Mail hub! You are already logged in.")
+      const unsubscribe = onSnapshot(
+        doc(db, loggedInUser.email, loggedInUser.email),
+        (doc) => {
+          console.log(doc.data());
+          dispatch(setProfile(doc.data()));
+        },
+        (error) => {
+          console.error("Error fetching document:", error);
+        }
+      );
+
+      toast.success("Welcome back to Mail hub! You are already logged in.");
     }
-  },[])
+  }, []);
 
   return (
     <Card>
@@ -91,9 +124,17 @@ const LogIn = () => {
             onClick={signInWithGoogle}
             className="w-full flex items-center justify-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400/50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isLoading ? (<><BiLoader className="w-5 h-5 animate-spin mr-2"/>Loading...</>):<><Camera />
-            Continue with Google</>}
-            
+            {isLoading ? (
+              <>
+                <BiLoader className="w-5 h-5 animate-spin mr-2" />
+                Loading...
+              </>
+            ) : (
+              <>
+                <Camera />
+                Continue with Google
+              </>
+            )}
           </button>
         </div>
 
@@ -156,7 +197,14 @@ const LogIn = () => {
               disabled={isLoading}
               className="w-full px-4 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-teal-400 to-rose-400 hover:from-teal-300 hover:to-rose-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400/50 shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
-              {isLoading ? (<><BiLoader className="w-5 h-5 animate-spin mr-2"/>Loading...</>):"Sign in"}
+              {isLoading ? (
+                <>
+                  <BiLoader className="w-5 h-5 animate-spin mr-2" />
+                  Loading...
+                </>
+              ) : (
+                "Sign in"
+              )}
             </button>
             <button
               type="button"
