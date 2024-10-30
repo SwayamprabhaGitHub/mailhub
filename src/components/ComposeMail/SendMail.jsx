@@ -8,6 +8,7 @@ import { db } from "../../firebase";
 import { toast } from "react-toastify";
 
 const SendMail = () => {
+  const user = useSelector((state) => state.appSlice.user);
   const open = useSelector((state) => state.appSlice.open);
   const dispatch = useDispatch();
 
@@ -22,6 +23,7 @@ const SendMail = () => {
   // };
 
   const formData = {
+    from: user?.email,
     to: to,
     subject: subject,
     message: editorContent,
@@ -33,6 +35,7 @@ const SendMail = () => {
       return toast.error("To is required");
     }
     await addDoc(collection(db, "emails"), {
+      from: user.email,
       to: formData.to,
       subject: formData.subject,
       message: formData.message,

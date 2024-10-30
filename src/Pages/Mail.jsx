@@ -17,6 +17,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { db } from "../firebase";
 
 const Mail = () => {
+  const selectedMailPath = useSelector((state) => state.navSlice.selectedMailPath);
   const emails = useSelector((state) => state.appSlice.emails);
   const navigate = useNavigate();
   const params = useParams();
@@ -30,7 +31,7 @@ const Mail = () => {
   const deleteMailById = async (id) => {
     try {
       await deleteDoc(doc(db, "emails", id));
-      navigate("/inbox"); // Navigate after successful deletion
+      navigate(`/${selectedMailPath}`); // Navigate after successful deletion
     } catch (error) {
       console.log(error);
     }
@@ -39,13 +40,13 @@ const Mail = () => {
   useEffect(() => {
     if (!selectedEmail) {
       // If the selected email does not exist, navigate to inbox
-      navigate("/inbox");
+      navigate(`/${selectedMailPath}`);
     }
   },[selectedEmail,navigate])
 
 
   const handleArrowBack = () => {
-    navigate("/inbox");
+    navigate(`/${selectedMailPath}`);
   };
   const iconsButton = [
     { icon: <IoMdArrowBack size={"20px"} />, function: handleArrowBack },

@@ -24,9 +24,9 @@ const LogIn = () => {
   const [password, setPassword] = useState("");
 
   //updating profile in firebase
-  const createDoc = async (loggedInUser, email) => {
+  const createDoc = async (loggedInUser) => {
     try {
-      await setDoc(doc(db, email, email), { ...loggedInUser });
+      await setDoc(doc(db, loggedInUser.email, loggedInUser.email), { ...loggedInUser });
     } catch (error) {
       console.log(error.message);
     }

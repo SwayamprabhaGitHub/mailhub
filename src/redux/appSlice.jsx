@@ -21,8 +21,7 @@ const appSlice = createSlice({
     },
     setProfile: (state, action) => {
       state.profile = action.payload;
-    }
-    
+    },
   },
 });
 
