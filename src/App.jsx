@@ -9,7 +9,7 @@ import Inbox from "./Pages/Inbox";
 import Mail from "./Pages/Mail";
 import SendMail from "./components/ComposeMail/SendMail";
 import { useDispatch, useSelector } from "react-redux";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { collection, onSnapshot, or, orderBy, query, where } from "firebase/firestore";
 import { db } from "./firebase";
 import { setEmails } from "./redux/appSlice";
 import NProgress from "nprogress";
@@ -131,7 +131,12 @@ function App() {
   const profilePopup = useSelector((state) => state.appSlice.profilePopup);
   
   useEffect(() => {
-    const q = query(collection(db, "emails"), orderBy("createdAt", "desc"));
+    const q = query(collection(db, "emails"),
+    or(
+        where("to", "==", user?.email || ""),
+        where("from", "==", user?.email || "")
+    ),
+     orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const allEmails = snapshot.docs.map((doc) => ({
         ...doc.data(),
@@ -153,7 +158,7 @@ function App() {
       unsubscribe();
       NProgress.done(); //ensure NProgress stops on unmount
     };
-  }, []);
+  }, [user]);
   console.log("app");
   //Start NProgress when the app is loading
   useEffect(() => {
