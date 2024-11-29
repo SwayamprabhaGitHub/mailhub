@@ -26,6 +26,7 @@ import ForgotPassword from "./Pages/ForgotPassword";
 import UserProfile from "./Pages/UserProfile";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AllMails from "./Pages/AllMails";
 
 
 
@@ -116,6 +117,17 @@ const createRouter = (signedIn) =>
         { path: "/trash", element: signedIn ? <Trash /> : <Navigate to="/" /> },
         {
           path: "/trash/:id",
+          element: signedIn ? <Mail /> : <Navigate to="/" />,
+        },
+      ],
+    },
+    {
+      path: "/allmails",
+      element: <Body />,
+      children: [
+        { path: "/allmails", element: signedIn ? <AllMails /> : <Navigate to="/" /> },
+        {
+          path: "/allmails/:id",
           element: signedIn ? <Mail /> : <Navigate to="/" />,
         },
       ],

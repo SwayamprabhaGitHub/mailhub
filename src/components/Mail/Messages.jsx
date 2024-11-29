@@ -72,6 +72,8 @@ const Messages = () => {
       return emails?.filter((email) => email.to === user.email);
     } else if (selectedMailPath === "sent") {
       return emails?.filter((email) => email.from === user.email);
+    } else if (selectedMailPath === "allmails") {
+      return emails
     }
     return [];
   }, [selectedMailPath, emails, user.email]);

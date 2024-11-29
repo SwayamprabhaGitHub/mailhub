@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Avatar from "react-avatar";
 import { CiCircleQuestion } from "react-icons/ci";
 import { IoIosSearch } from "react-icons/io";
@@ -8,20 +8,35 @@ import { TbGridDots } from "react-icons/tb";
 import { useDispatch, useSelector } from "react-redux";
 import { setSearchText, setShowSidebar, setUser } from "../../redux/appSlice";
 import ProfilePopup from "./ProfilePopup";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
 import { toast } from "react-toastify";
+import { useStripHTML } from "../hooks/useStripHTML";
 
 const Navbar = () => {
   const { emails, user, profile } = useSelector((state) => state.appSlice);
+  const searchText = useSelector((state) => state.appSlice.searchText);
   const [input, setInput] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const location = useLocation();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  //To handle navigations related to searchbar when we are inside mail
+  useEffect(() => {
+    if (location.pathname !== "/allmails") {
+      setInput("");
+      dispatch(setSearchText(""));
+    }
+  }, [location]);
+  //To handle navigations related to searchbar when we are inside mail
+  useMemo(() => {
+    if(searchText !== "") navigate("/allmails")
+  }, [searchText]);
 
    // Close profile popup when clicking outside
    useEffect(() => {
@@ -106,6 +121,7 @@ const Navbar = () => {
     dispatch(setSearchText(suggestion.subject));
     setInput(suggestion.subject);
     setShowSuggestions(false); // Hide suggestions after clicking
+    // navigate("/allmails");
     setSuggestions([]);
   };
 
@@ -173,25 +189,29 @@ const Navbar = () => {
             {suggestions.map((suggestion) => (
               <li
                 key={suggestion.id}
-                className="flex flex-col px-4 py-3 hover:bg-teal-200/30 transition-colors duration-200 cursor-pointer"
+                className="flex flex-col px-4 py-1 border-b hover:bg-teal-200/30 transition-colors duration-200 cursor-pointer"
                 onClick={() => handleSuggestionClick(suggestion)}
               >
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between">
                   <div>
-                    <span className="text-gray-800 font-semibold">
+                    <div className="text-gray-800 font-semibold truncate w-96">
                       {suggestion.subject}
-                    </span>
-                    <span className="text-gray-500 text-sm">
+                    </div>
+                    <div className="text-gray-400/60 text-xs">
                       {" "}
                       (To: {suggestion.to})
-                    </span>
+                    </div>
+                    <div className="text-gray-400/60 text-xs">
+                      {" "}
+                      (From: {suggestion.from})
+                    </div>
                   </div>
                   <div className="text-gray-400 text-xs">
                     {suggestion.createdAt}
                   </div>
                 </div>
-                <div className="text-gray-600 text-sm mt-1">
-                  {suggestion.message.substring(0, 30)}...
+                <div className="text-gray-700 text-sm mt-1 truncate w-auto">
+                  {useStripHTML(suggestion.message)}
                 </div>
               </li>
             ))}

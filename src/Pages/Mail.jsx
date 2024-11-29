@@ -19,6 +19,7 @@ import { db } from "../firebase";
 const Mail = () => {
   const selectedMailPath = useSelector((state) => state.navSlice.selectedMailPath);
   const emails = useSelector((state) => state.appSlice.emails);
+  const user = useSelector((state) => state.appSlice.user);
   const navigate = useNavigate();
   const params = useParams();
 
@@ -97,18 +98,23 @@ const Mail = () => {
         <div className="flex items-center justify-between bg-transparent gap-1">
           <div className="flex items-center gap-2">
             <h1 className="text-xl font-medium">{selectedEmail.subject}</h1>
-            <span className="text-sm bg-gray-200 rounded-md px-2">{(selectedMailPath === "inbox" && "inbox") || (selectedMailPath === "sent" && "sent")}</span>
+            <span className="text-sm bg-gray-200 rounded-md px-2 mt-1">{(selectedEmail?.from === user?.email && "sent") || (selectedEmail?.to === user?.email && "inbox")}</span>
           </div>
           <div className="flex-none text-gray-500 my-5 text-sm">
             <p>{selectedEmail.createdAt}</p>
           </div>
         </div>
-        <div className="flex gap-3 items-center">
-        <span className="text-gray-600">{(selectedMailPath === "inbox" && "from:") || (selectedMailPath === "sent" && "to:")}</span>
-          <h1 className="font-medium text-lg text-black">{(selectedMailPath === "inbox" && selectedEmail?.from) || (selectedMailPath === "sent" && selectedEmail?.to)}</h1>
-          
+        <div className="flex-col gap-3 justify-center border-b-2 pb-4">
+          <div className="flex items-center gap-2">
+          <span className="text-gray-600 text-sm">from:</span>
+          <h1 className="font-normal text-sm text-black">{selectedEmail?.from}</h1>
+          </div>
+          <div className="flex items-center gap-2">
+          <span className="text-gray-600 text-sm">to:</span>
+          <h1 className="font-normal text-sm text-black">{selectedEmail?.to}</h1>
+          </div>
         </div>
-        <div className="my-10 custom-list">
+        <div className="my-10 custom-list shadow-sm shadow-zinc-300 p-3 rounded-md">
           <div
             className="formatted-content"
             dangerouslySetInnerHTML={{ __html: selectedEmail.message }}

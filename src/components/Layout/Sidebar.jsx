@@ -4,6 +4,7 @@ import { IoMdStar } from "react-icons/io";
 import { LuPencil } from "react-icons/lu";
 import { MdOutlineDrafts, MdOutlineKeyboardArrowDown, MdOutlineWatchLater } from "react-icons/md";
 import { TbSend2 } from "react-icons/tb";
+import { BsMailbox2 } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { setOpen } from "../../redux/appSlice";
 import { NavLink } from "react-router-dom";
@@ -16,6 +17,7 @@ const sideBarItems = [
   { icon: <TbSend2 size={"20px"} />, text: "Sent", to: "/sent" },
   { icon: <MdOutlineDrafts size={"20px"} />, text: "Drafts", to: "/draft" },
   { icon: <BsTrash size={"20px"} />, text: "Trash", to: "/trash" },
+  { icon: <BsMailbox2 size={"20px"} />, text: "All Mails", to: "/allmails" },
   { icon: <MdOutlineKeyboardArrowDown size={"20px"} />, text: "More", to: "/more" }
 ];
 
