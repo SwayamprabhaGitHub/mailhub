@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const appSlice = createSlice({
   name: "appSlice",
-  initialState: { open: false, emails: [], searchText: "", showSidebar: false, signedIn: false, user: null, profile: null },
+  initialState: { open: false, emails: [], searchText: "", showSidebar: true, signedIn: false, user: null, profile: null },
   reducers: {
     setOpen: (state, action) => {
       state.open = action.payload;

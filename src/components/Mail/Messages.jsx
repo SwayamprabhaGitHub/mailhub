@@ -57,15 +57,17 @@
 
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import Message from "./Message";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import LoadingSpinner from "../UI/LoadingSpinner";
+import { setMailCount } from "../../redux/navSlice";
 
 const Messages = () => {
   const selectedMailPath = useSelector(
     (state) => state.navSlice.selectedMailPath
   );
   const { emails, searchText, user } = useSelector((state) => state.appSlice);
-  const [tempEmails, setTempEmails] = useState(null);
+  const [tempEmails, setTempEmails] = useState([]);
+  const dispatch = useDispatch();
 
   const filteredEmails = useMemo(() => {
     if (selectedMailPath === "inbox") {
@@ -81,6 +83,11 @@ const Messages = () => {
   useEffect(() => {
     setTempEmails(filteredEmails);
   }, [filteredEmails]);
+
+  useMemo(() => {
+    if(tempEmails.length !== 0 && selectedMailPath === "inbox")
+    dispatch(setMailCount(tempEmails.length));
+  },[tempEmails]);
 
   useEffect(() => {
     const debounceTimeout = setTimeout(() => {
