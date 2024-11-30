@@ -6,6 +6,7 @@ import UiEmailTypeBody from "../components/UI/UiEmailTypeBody";
 
 const Sent = () => {
   const dispatch = useDispatch();
+  const [noOfMailOnCurrPage, setNoOfMailOnCurrPage] = useState(0); // this is for the pagination
 
   useEffect(() => {
     dispatch(setSelectedMailPath("sent"));
@@ -13,9 +14,9 @@ const Sent = () => {
 
   return (
      <div className="flex-1 bg-white/70 rounded-xl mx-5">
-      <UiEmailTypeBody/>
+      <UiEmailTypeBody setNoOfMailOnCurrPage={setNoOfMailOnCurrPage} noOfMailOnCurrPage={noOfMailOnCurrPage}/>
       <div className="h-[75vh] overflow-y-auto">
-        <Messages />
+      <Messages noOfMailOnCurrPage={noOfMailOnCurrPage} />
       </div>
     </div>
   );

@@ -59,9 +59,9 @@ import React, { useEffect, useRef, useState, useMemo } from "react";
 import Message from "./Message";
 import { useDispatch, useSelector } from "react-redux";
 import LoadingSpinner from "../UI/LoadingSpinner";
-import { setMailCount } from "../../redux/navSlice";
+import { setMailCount, setTotalNumOfMails } from "../../redux/navSlice";
 
-const Messages = () => {
+const Messages = ({ noOfMailOnCurrPage }) => {
   const selectedMailPath = useSelector(
     (state) => state.navSlice.selectedMailPath
   );
@@ -85,8 +85,9 @@ const Messages = () => {
   }, [filteredEmails]);
 
   useMemo(() => {
-    if(tempEmails.length !== 0 && selectedMailPath === "inbox")
-    dispatch(setMailCount(tempEmails.length));
+    if(selectedMailPath === "inbox") dispatch(setMailCount(tempEmails.length));
+
+    dispatch(setTotalNumOfMails(tempEmails.length)); // this to tell how many emails are in every path(sidebar link)
   },[tempEmails]);
 
   useEffect(() => {
@@ -111,10 +112,9 @@ const Messages = () => {
           <LoadingSpinner />
         </div>
       )}
-      {tempEmails &&
-        tempEmails.map((email, index) => (
-          <Message key={email.id} email={email} index={index} />
-        ))}
+      {tempEmails && tempEmails.length > noOfMailOnCurrPage + 20
+        ? tempEmails.slice(noOfMailOnCurrPage, noOfMailOnCurrPage + 20)?.map((email, index) => <Message key={email.id} email={email} index={index} />)
+        : tempEmails.slice(noOfMailOnCurrPage)?.map((email, index) => <Message key={email.id} email={email} index={index} />)}
     </div>
   );
 };
