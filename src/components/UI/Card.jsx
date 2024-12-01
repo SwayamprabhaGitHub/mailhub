@@ -1,7 +1,6 @@
 import React from "react";
 
 const Card = ({ children, className }) => {
-    console.log("card")
   return (
     <div className={`min-h-screen w-full relative flex items-center justify-center bg-slate-100 ${className}`}>
       {/* Animated background patterns */}

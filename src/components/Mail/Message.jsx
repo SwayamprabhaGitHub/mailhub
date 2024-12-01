@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { useStripHTML } from "../hooks/useStripHTML";
 
 const Message = ({ email, index }) => {
-    console.log(email);
   const selectedMailPath = useSelector(
     (state) => state.navSlice.selectedMailPath
   );

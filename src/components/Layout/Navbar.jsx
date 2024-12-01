@@ -13,6 +13,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
 import { toast } from "react-toastify";
 import { useStripHTML } from "../hooks/useStripHTML";
+import { setMailCount } from "../../redux/navSlice";
 
 const Navbar = () => {
   const { emails, user, profile } = useSelector((state) => state.appSlice);
@@ -71,6 +72,7 @@ const Navbar = () => {
     } catch (error) {
       toast.error(error.message);
     }finally {
+      dispatch(setMailCount(0));
       setIsProfileOpen(false);
     }
     

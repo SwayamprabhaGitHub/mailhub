@@ -85,7 +85,7 @@ const Messages = ({ noOfMailOnCurrPage }) => {
   }, [filteredEmails]);
 
   useMemo(() => {
-    if(selectedMailPath === "inbox") dispatch(setMailCount(tempEmails.length));
+    if(tempEmails.length !== 0 && selectedMailPath === "inbox") dispatch(setMailCount(tempEmails.length));
 
     dispatch(setTotalNumOfMails(tempEmails.length)); // this to tell how many emails are in every path(sidebar link)
   },[tempEmails]);
