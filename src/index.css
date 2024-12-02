@@ -248,7 +248,14 @@
     opacity: 1;
     transform: translateX(20px);
   }
- 
+  97% {
+    opacity: 1;
+    transform: translateX(8px);
+  }
+  99% {
+    opacity: 1;
+    transform: translateX(-8px);
+  }
   100% {
     opacity: 1;
     transform: translateX(0);
