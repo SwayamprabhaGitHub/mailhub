@@ -8,7 +8,7 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useCurrentUser } from "../components/hooks/useCurrentUser";
 import { setProfile, setUser } from "../redux/appSlice";
 import { useDispatch } from "react-redux";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -50,8 +50,10 @@ const SignUp = () => {
       //updating user profile with name
       await updateProfile(user, {displayName: fullName});
       console.log(user);
+      const docsnap = await getDoc(doc(db, user.email, user.email));
+      const docdata = docsnap.exists() ? docsnap.data() : {};
       //updating the redux
-      const loggedInUser = useCurrentUser(user);
+      const loggedInUser = useCurrentUser(user, docdata);
       createDoc(loggedInUser, email);
       dispatch(setUser(loggedInUser));
       dispatch(setProfile(loggedInUser));

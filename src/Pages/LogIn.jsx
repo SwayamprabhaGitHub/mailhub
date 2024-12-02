@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import Card from "../components/UI/Card";
 import { BiLoader } from "react-icons/bi";
 import { useCurrentUser } from "../components/hooks/useCurrentUser";
-import { doc, onSnapshot, setDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
 
 const LogIn = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -43,11 +43,13 @@ const LogIn = () => {
       //The signed-in user info.
       const user = result.user;
       console.log(user);
-      const loggedInUser = useCurrentUser(user);
+      const docsnap = await getDoc(doc(db, user.email, user.email));
+      const docdata = docsnap.exists() ? docsnap.data() : {};
+      const loggedInUser = useCurrentUser(user, docdata);
 
       toast.success("User Authenticated!");
       dispatch(setUser(loggedInUser));
-      dispatch(setProfile(loggedInUser));
+      // dispatch(setProfile(loggedInUser));
       createDoc(loggedInUser, email);
       // console.log(user, loggedInUser);
     } catch (error) {
@@ -71,9 +73,11 @@ const LogIn = () => {
         password
       );
       console.log(userCredential.user);
-      const loggedInUser = useCurrentUser(userCredential.user);
+      const docsnap = await getDoc(doc(db, userCredential.user.email, userCredential.user.email));
+      const docdata = docsnap.exists() ? docsnap.data() : {};
+      const loggedInUser = useCurrentUser(userCredential.user, docdata);
       dispatch(setUser(loggedInUser));
-      dispatch(setProfile(loggedInUser));
+      // dispatch(setProfile(loggedInUser));
       createDoc(loggedInUser, email);
       toast.success("Welcome to Mailhub!");
     } catch (error) {
@@ -87,19 +91,17 @@ const LogIn = () => {
     const user = auth.currentUser;
 
     if (user) {
-      const loggedInUser = useCurrentUser(user);
+      let loggedInUser = useCurrentUser(user);
       dispatch(setUser(loggedInUser));
-      const unsubscribe = onSnapshot(
-        doc(db, loggedInUser.email, loggedInUser.email),
-        (doc) => {
-          console.log(doc.data());
-          dispatch(setProfile(doc.data()));
-        },
-        (error) => {
-          console.error("Error fetching document:", error);
-        }
-      );
-
+      const userDataUpdate = async() => {
+        const docsnap = await getDoc(doc(db, user.email, user.email));
+        const docdata = docsnap.exists() ? docsnap.data() : {};
+        loggedInUser = useCurrentUser(user, docdata);
+        console.log(user);
+        // dispatch(setUser(loggedInUser)); // check if we can add on last testing if necessary
+        await setDoc(doc(db, loggedInUser.email, loggedInUser.email), { ...loggedInUser });
+      }
+      userDataUpdate();
       toast.success("Welcome back to Mail hub! You are already logged in.");
     }
   }, []);

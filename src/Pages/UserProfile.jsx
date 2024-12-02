@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setProfile, setUser } from "../../src/redux/appSlice";
 import { IoMdArrowBack } from "react-icons/io";
@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import Card from "../components/UI/Card";
 import { useNavigate } from "react-router-dom";
-import { sendEmailVerification, updateProfile } from "firebase/auth";
+import { getAuth, sendEmailVerification, updateProfile } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { useCurrentUser } from "../components/hooks/useCurrentUser";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
@@ -23,8 +23,11 @@ import { doc, setDoc, updateDoc } from "firebase/firestore";
 const UserProfile = () => {
   const user = useSelector((state) => state.appSlice.user);
   const profile = useSelector((state) => state.appSlice.profile);
+  const selectedMailPath = useSelector((state) => state.navSlice.selectedMailPath);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  console.log(getAuth());
 
   const [formData, setFormData] = useState({
     displayName: profile?.displayName || "",
@@ -80,7 +83,8 @@ const UserProfile = () => {
       //   await setDoc(doc(db, profile.email, profile.email), {...updatedUser});
       // }
       dispatch(setUser(updatedUser));
-      dispatch(setProfile(updatedUser));
+      // dispatch(setProfile(updatedUser));
+      setIsEditing({displayName: !!!formData?.displayName, phoneNumber: !!!formData?.phoneNumber, photoURL: !!!formData?.photoURL});
       toast.success("Profile updated Successfully.");
     } catch (error) {
       toast.error(error.message);
@@ -121,7 +125,7 @@ const UserProfile = () => {
           {profile ? (
             <div className="relative text-center mb-8 p-6">
               <div
-                onClick={() => navigate("/inbox")}
+                onClick={() => navigate(`/${selectedMailPath}`)}
                 className="absolute p-3 rounded-full hover:bg-teal-300/30 cursor-pointer transition-all duration-300"
               >
                 <IoMdArrowBack size={"20px"} />
