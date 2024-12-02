@@ -76,6 +76,8 @@ const Messages = ({ noOfMailOnCurrPage }) => {
       return emails?.filter((email) => email.from === user.email);
     } else if (selectedMailPath === "allmails") {
       return emails
+    } else if (selectedMailPath === "starred") {
+      return emails?.filter((email) => email.starred);
     }
     return [];
   }, [selectedMailPath, emails, user.email]);
