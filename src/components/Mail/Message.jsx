@@ -3,6 +3,7 @@ import { MdCropSquare, MdLabelImportantOutline } from "react-icons/md";
 import { RiStarLine } from "react-icons/ri";
 import { RiStarSFill } from "react-icons/ri";
 import { IoMdCheckboxOutline } from "react-icons/io";
+import { TbTrashX } from "react-icons/tb";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useStripHTML } from "../hooks/useStripHTML";
@@ -54,7 +55,19 @@ const Message = ({ email, index }) => {
     } catch (error) {
       toast.error(error.message);
     }
-    // setSelectStarred(!selectStarred);
+  }
+
+  const handleSelectedTrashedEmail = async (event) => {
+    event.stopPropagation()
+    const trashedStatus = email?.trashed ? false : true;
+    try {
+      await updateDoc(doc(db, "emails", email.id),{
+        trashed: trashedStatus
+      })
+
+    } catch (error) {
+      toast.error(error.message);
+    }
   }
 
   const openMail = () => {
@@ -67,7 +80,7 @@ const Message = ({ email, index }) => {
       style={{ "--delay": `${index * 100}ms` }}
       className="flex items-center justify-between border-b border-gray-200 px-4 text-sm cursor-pointer hover:bg-rose-300/20 hover:shadow-md hover:-translate-y-1 transition-all duration-300 ease-in-out animate-slideUp opacity-0 [animation-delay:var(--delay)]"
     >
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-1">
         <div className="flex-none text-gray-300 px-1 py-2" onClick={handleSelectedEmail} >
           {selectSquare ? <IoMdCheckboxOutline className="w-5 h-5 text-teal-400" />:<MdCropSquare className="w-5 h-5" />}
           {/* {improve} */}
@@ -75,10 +88,13 @@ const Message = ({ email, index }) => {
         <div className="flex-none text-gray-300 px-1 py-2" onClick={handleSelectedStarredEmail}>
         {email?.starred ? <RiStarSFill className="w-5 h-5 text-teal-400" />:<RiStarLine className="w-5 h-5" />}
         </div>
+        <div className="flex-none text-gray-300 px-1 py-2" onClick={handleSelectedTrashedEmail}>
+          {email?.trashed ? <TbTrashX className="w-5 h-5 text-rose-600 hover:text-teal-400" /> : <TbTrashX className="w-5 h-5 hover:text-rose-600" />}
+        </div>
       </div>
       <div className="flex-1 ml-4 flex items-center gap-6">
         <p className="text-black font-bold w-64">{(selectedMailPath !== "sent" && email?.from) || (selectedMailPath === "sent" && email?.to)}</p>
-        <p className="text-gray-600 truncate inline-block w-[50rem]">
+        <p className="text-gray-600 truncate inline-block w-[32rem]">
           <strong>{email?.subject}</strong>-{useStripHTML(email?.message)}
         </p>
       </div>
