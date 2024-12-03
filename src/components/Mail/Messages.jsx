@@ -59,7 +59,8 @@ import React, { useEffect, useRef, useState, useMemo } from "react";
 import Message from "./Message";
 import { useDispatch, useSelector } from "react-redux";
 import LoadingSpinner from "../UI/LoadingSpinner";
-import { setMailCount, setTotalNumOfMails } from "../../redux/navSlice";
+import { setMailCount, setTotalMailsInPath, setTotalNumOfMails } from "../../redux/navSlice";
+import { setSelectedEmailsArray } from "../../redux/appSlice";
 
 const Messages = ({ noOfMailOnCurrPage }) => {
   const selectedMailPath = useSelector(
@@ -71,13 +72,15 @@ const Messages = ({ noOfMailOnCurrPage }) => {
 
   const filteredEmails = useMemo(() => {
     if (selectedMailPath === "inbox") {
-      return emails?.filter((email) => email.to === user.email);
+      return emails?.filter((email) => email.to === user.email && !email.trashed);
     } else if (selectedMailPath === "sent") {
-      return emails?.filter((email) => email.from === user.email);
+      return emails?.filter((email) => email.from === user.email && !email.trashed);
     } else if (selectedMailPath === "allmails") {
       return emails
     } else if (selectedMailPath === "starred") {
-      return emails?.filter((email) => email.starred);
+      return emails?.filter((email) => email.starred && !email.trashed);
+    } else if (selectedMailPath === "trash") {
+      return emails?.filter((email) => email.trashed);
     }
     return [];
   }, [selectedMailPath, emails, user.email]);
@@ -87,10 +90,11 @@ const Messages = ({ noOfMailOnCurrPage }) => {
   }, [filteredEmails]);
 
   useMemo(() => {
-    if(tempEmails.length !== 0 && selectedMailPath === "inbox") dispatch(setMailCount(tempEmails.length));
+    if(tempEmails.length !== 0 && selectedMailPath === "inbox") dispatch(setMailCount(tempEmails.length)); // to show how many emails are there in inbox
 
     dispatch(setTotalNumOfMails(tempEmails.length)); // this to tell how many emails are in every path(sidebar link)
-  },[tempEmails]);
+    dispatch(setTotalMailsInPath(tempEmails));
+  },[tempEmails, selectedMailPath]);
 
   useEffect(() => {
     const debounceTimeout = setTimeout(() => {
@@ -106,6 +110,10 @@ const Messages = ({ noOfMailOnCurrPage }) => {
     }, 300);
     return () => clearTimeout(debounceTimeout);
   }, [searchText, filteredEmails]);
+
+  useEffect(() => {
+    dispatch(setSelectedEmailsArray([])); // to clear selected message when path changes
+  },[selectedMailPath])
 
   return (
     <div>
