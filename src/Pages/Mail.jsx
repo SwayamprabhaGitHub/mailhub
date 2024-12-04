@@ -16,11 +16,13 @@ import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { db } from "../firebase";
 import { toast } from "react-toastify";
+import { Tooltip } from "react-tooltip";
 
 const Mail = () => {
   const selectedMailPath = useSelector((state) => state.navSlice.selectedMailPath);
   const emails = useSelector((state) => state.appSlice.emails);
   const user = useSelector((state) => state.appSlice.user);
+  const totalMailsInPath = useSelector((state) => state.navSlice.totalMailsInPath);
   const navigate = useNavigate();
   const params = useParams();
 
@@ -50,6 +52,38 @@ const Mail = () => {
     }
   };
 
+  const nextMail = async () => {
+    const index = totalMailsInPath.findIndex((email) => email.id === selectedEmail.id);
+    if (index + 1 < totalMailsInPath.length) {
+      navigate(`/${selectedMailPath}/${totalMailsInPath[index + 1].id}`);
+      if (totalMailsInPath[index + 1].read === false) {
+        try {
+          await updateDoc(doc(db, "emails", totalMailsInPath[index + 1].id), {
+            read: true,
+          });
+        } catch (error) {
+          toast.error(error.message);
+        }
+      }
+    }
+  };
+ 
+  const prevMail = async () => {
+    const index = totalMailsInPath.findIndex((email) => email.id === selectedEmail.id);
+    if (index - 1 >= 0) {
+      navigate(`/${selectedMailPath}/${totalMailsInPath[index - 1].id}`);
+      if (totalMailsInPath[index - 1].read === false) {
+        try {
+          await updateDoc(doc(db, "emails", totalMailsInPath[index - 1].id), {
+            read: true,
+          });
+        } catch (error) {
+          toast.error(error.message);
+        }
+      }
+    }
+  };
+
   useEffect(() => {
     if (!selectedEmail) {
       // If the selected email does not exist, navigate to inbox
@@ -63,17 +97,17 @@ const Mail = () => {
   };
   const iconsButton = [
     { icon: <IoMdArrowBack size={"20px"} />, function: handleArrowBack },
-    { icon: <BiArchiveIn size={"20px"} /> },
-    { icon: <MdOutlineReport size={"20px"} /> },
+    { icon: <BiArchiveIn size={"20px"} id="archive" />, id: "#archive", content: "Not Clickable" },
+    { icon: <MdOutlineReport size={"20px"} id="report" />, id: "#report", content: "Not Clickable" },
     {
-      icon: <MdDeleteOutline size={"20px"} />,
+      icon: <MdDeleteOutline size={"20px"} id="delete" />, id: "#delete", content: "Delete for Me",
       function: () => deleteMailById(params.id),
     },
-    { icon: <MdOutlineMarkEmailUnread size={"20px"} />, function: handleMarkUnread },
-    { icon: <MdOutlineWatchLater size={"20px"} /> },
-    { icon: <MdOutlineAddTask size={"20px"} /> },
-    { icon: <MdOutlineDriveFileMove size={"20px"} /> },
-    { icon: <IoMdMore size={"20px"} /> },
+    { icon: <MdOutlineMarkEmailUnread size={"20px"} id="mark-unread" />, id: "#mark-unread", content: "Mark UnRead", function: handleMarkUnread },
+    { icon: <MdOutlineWatchLater size={"20px"} id="snooze" />, id: "#snooze", content: "Snoozed", },
+    { icon: <MdOutlineAddTask size={"20px"} id="add-task" />, id: "#add-task", content: "Not Clickable", },
+    { icon: <MdOutlineDriveFileMove size={"20px"} id="draft" />, id: "#draft", content: "Not Clickable", },
+    { icon: <IoMdMore size={"20px"} id="more" />, id: "#more", content: "Not Clickable", },
   ];
 
   if(!selectedEmail) {
@@ -92,16 +126,17 @@ const Mail = () => {
                 style={{ '--delay': `${index * 300}ms` }}
                 className="p-2 rounded-full hover:bg-teal-300/30 cursor-pointer transition-all duration-1000 ease-in-out animate-slideIn opacity-0 [animation-delay:var(--delay)]"
               >
+                <Tooltip anchorSelect={item.id} content={item.content} place="top" className="backdrop-blur-3xl" border="1px solid red" float={true} opacity={0.5} />
                 {item.icon}
               </div>
             );
           })}
         </div>
         <div className="flex items-center gap-2 animate-slideIn">
-          <button className="rounded-full p-1 hover:bg-teal-300/30 transition-all duration-200 ease-in-out">
+          <button onClick={prevMail} className="rounded-full p-1 hover:bg-teal-300/30 transition-all duration-200 ease-in-out">
             <MdKeyboardArrowLeft size={"24px"} />
           </button>
-          <button className="rounded-full p-1 hover:bg-teal-300/30 transition-all duration-200 ease-in-out">
+          <button onClick={nextMail} className="rounded-full p-1 hover:bg-teal-300/30 transition-all duration-200 ease-in-out">
             <MdKeyboardArrowRight size={"24px"} />
           </button>
         </div>

@@ -9,6 +9,7 @@ import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { toast } from "react-toastify";
 import { setSelectedEmailsArray } from "../../redux/appSlice";
+import { Tooltip } from "react-tooltip";
  
 const mailType = [
   {
@@ -243,9 +244,10 @@ const UiEmailTypeBody = ({ setNoOfMailOnCurrPage, noOfMailOnCurrPage }) => {
             <IoMdRefresh size={"20px"} />
           </div>
           {selectedEmailsArray.length > 0 && selectedMailPath !== "trash" && <div onClick={handleTrashEmail} className="p-2 cursor-pointer rounded-full hover:bg-teal-200/30 transition-all duration-500 ease-in-out ">
-            <FaTrash size={"16px"} />
+            <FaTrash size={"16px"} id="fatrash" />
+            <Tooltip anchorSelect="#fatrash" content="Move to Trash" place="top" className="backdrop-blur-3xl" border="1px solid red" float={true} opacity={0.5} />
           </div>}
-          {selectedEmailsArray.length > 0 && selectedMailPath === "trash" && <div onClick={handleRestoreEmail} className="p-1 cursor-pointer bg-gray-200 shadow-lg rounded-md hover:text-teal-700 hover:font-semibold hover:bg-teal-200/30 transition-all duration-500 ease-in-out text-black">
+          {selectedEmailsArray.length > 0 && (selectedMailPath === "trash" || selectedMailPath === "allmails") && <div onClick={handleRestoreEmail} className="p-1 cursor-pointer bg-gray-200 shadow-lg rounded-md hover:text-teal-700 hover:font-semibold hover:bg-teal-200/30 transition-all duration-500 ease-in-out text-black">
             <div>Restore</div>
           </div>}
           {selectedEmailsArray.length > 0 && selectedMailPath === "trash" && <div onClick={handleDeleteEmail} className="p-1 cursor-pointer bg-gray-200 shadow-lg rounded-md hover:text-rose-700 hover:font-semibold hover:bg-rose-200/30 transition-all duration-500 ease-in-out text-black">

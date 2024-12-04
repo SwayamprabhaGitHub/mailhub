@@ -50,7 +50,7 @@ const DropDownMenu = () => {
       const readMails = totalMailsInPath.filter(mail => mail?.read);
       dispatch(setSelectedEmailsArray(readMails));
     }
-    else if (option === "Unread"){
+    else if (option === "UnRead"){
       const unreadMails = totalMailsInPath.filter(mail => !mail?.read);
       dispatch(setSelectedEmailsArray(unreadMails));
     }
