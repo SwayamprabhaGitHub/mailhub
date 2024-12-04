@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const appSlice = createSlice({
   name: "appSlice",
-  initialState: { open: false, emails: [], searchText: "", showSidebar: true, signedIn: false, user: null, profile: null, selectedEmailsArray: [] },
+  initialState: { open: false, emails: [], searchText: "", showSidebar: true, signedIn: false, user: null, profile: null, selectedEmailsArray: [], mailsArrToDelPermanent:[] },
   reducers: {
     setOpen: (state, action) => {
       state.open = action.payload;
@@ -24,9 +24,12 @@ const appSlice = createSlice({
     },
     setSelectedEmailsArray: (state, action) => {
       state.selectedEmailsArray = action.payload;
+    },
+    setMailsArrToDelPermanent: (state, action) => {
+      state.mailsArrToDelPermanent = action.payload;
     }
   },
 });
 
-export const { setOpen, setEmails, setSearchText, setShowSidebar, setUser, setProfile, setSelectedEmailsArray } = appSlice.actions;
+export const { setOpen, setEmails, setSearchText, setShowSidebar, setUser, setProfile, setSelectedEmailsArray, setMailsArrToDelPermanent } = appSlice.actions;
 export default appSlice.reducer;

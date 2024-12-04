@@ -9,9 +9,9 @@ import Inbox from "./Pages/Inbox";
 import Mail from "./Pages/Mail";
 import SendMail from "./components/ComposeMail/SendMail";
 import { useDispatch, useSelector } from "react-redux";
-import { collection, doc, onSnapshot, or, orderBy, query, where } from "firebase/firestore";
+import { and, collection, doc, onSnapshot, or, orderBy, query, where } from "firebase/firestore";
 import { db } from "./firebase";
-import { setEmails, setProfile } from "./redux/appSlice";
+import { setEmails, setMailsArrToDelPermanent, setProfile } from "./redux/appSlice";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 import LoadingSpinner from "./components/UI/LoadingSpinner";
@@ -144,11 +144,19 @@ function App() {
   
   useEffect(() => {
     const q = query(collection(db, "emails"),
-    or(
-        where("to", "==", user?.email || ""),
-        where("from", "==", user?.email || "")
-    ),
+        where("emailID", "==", user?.email || ""),
      orderBy("createdAt", "desc"));
+     const q2 = query(collection(db, "emails"),
+     and(
+      or(
+        where("to", "==", user?.email || ""),
+        where("from", "==", user?.email || ""),
+      ),
+      where("emailID", "!=", user?.email || ""),
+     ),
+     orderBy("createdAt", "desc")
+     );
+
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const allEmails = snapshot.docs.map((doc) => ({
         ...doc.data(),
@@ -165,9 +173,27 @@ function App() {
       setLoading(false); //stop loading when emails are fetched
       NProgress.done(); //stop NProgress after fetching emails
     });
+
+    const unsubscribe2 = onSnapshot(q2, (snapshot) => {
+      const allEmails = snapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+        createdAt: doc.data().createdAt
+          ? doc
+              .data()
+              .createdAt.toDate()
+              .toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
+          : null,
+      }));
+      console.log(allEmails);
+      dispatch(setMailsArrToDelPermanent(allEmails));
+      setLoading(false); //stop loading when emails are fetched
+      NProgress.done(); //stop NProgress after fetching emails
+    });
     //cleanup on unmount
     return () => {
       unsubscribe();
+      unsubscribe2();
       NProgress.done(); //ensure NProgress stops on unmount
     };
   }, [user]);

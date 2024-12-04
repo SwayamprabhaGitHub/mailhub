@@ -39,6 +39,17 @@ const SendMail = () => {
       to: formData.to,
       subject: formData.subject,
       message: formData.message,
+      read: false,
+      emailID: user?.email,
+      createdAt: serverTimestamp(),
+    });
+    await addDoc(collection(db, "emails"), {
+      from: user.email,
+      to: formData.to,
+      subject: formData.subject,
+      message: formData.message,
+      read: false,
+      emailID: formData.to,
       createdAt: serverTimestamp(),
     });
     dispatch(setOpen(false));
