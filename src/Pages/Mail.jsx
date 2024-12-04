@@ -1,4 +1,4 @@
-import { deleteDoc, doc } from "firebase/firestore";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import React, { useEffect } from "react";
 import { BiArchiveIn } from "react-icons/bi";
 import { IoMdArrowBack, IoMdMore } from "react-icons/io";
@@ -15,6 +15,7 @@ import {
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { db } from "../firebase";
+import { toast } from "react-toastify";
 
 const Mail = () => {
   const selectedMailPath = useSelector((state) => state.navSlice.selectedMailPath);
@@ -38,6 +39,17 @@ const Mail = () => {
     }
   };
 
+  const handleMarkUnread = async () => {
+    navigate(`/${selectedMailPath}`);
+    try {
+      await updateDoc(doc(db, "emails", params.id), {
+        read: false,
+      });
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   useEffect(() => {
     if (!selectedEmail) {
       // If the selected email does not exist, navigate to inbox
@@ -57,7 +69,7 @@ const Mail = () => {
       icon: <MdDeleteOutline size={"20px"} />,
       function: () => deleteMailById(params.id),
     },
-    { icon: <MdOutlineMarkEmailUnread size={"20px"} /> },
+    { icon: <MdOutlineMarkEmailUnread size={"20px"} />, function: handleMarkUnread },
     { icon: <MdOutlineWatchLater size={"20px"} /> },
     { icon: <MdOutlineAddTask size={"20px"} /> },
     { icon: <MdOutlineDriveFileMove size={"20px"} /> },
