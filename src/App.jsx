@@ -132,6 +132,10 @@ const createRouter = (signedIn) =>
         },
       ],
     },
+    {
+      path: "*", // Catch-all route
+      element: signedIn ? <Navigate to="/inbox" /> : <Navigate to="/" />,
+    },
   ]);
 
 function App() {

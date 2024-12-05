@@ -109,22 +109,22 @@ const LogIn = () => {
   return (
     <Card>
       {/* Sign in form */}
-      <div className="w-full max-w-md p-8 rounded-xl relative z-10 mx-4 backdrop-blur-3xl bg-white/10 border border-white/10 shadow-xl animate-fadeIn">
-        <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-white/10 rounded-xl -z-10" />
+      <div className="w-full max-w-md p-8 rounded-xl relative z-10 mx-4 backdrop-blur-3xl bg-white/10 border border-white/70 shadow-xl animate-fadeIn">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-transparent to-white/10 rounded-xl -z-10" />
 
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-slate-700">
             Sign in to Mail Hub
           </h2>
-          <p className="text-slate-500 mt-2">
+          <p className="text-slate-400 mt-2">
             Welcome back! Please enter your details
           </p>
         </div>
 
-        <div className="mb-6">
+        <div className="mb-6 animate-slideIn">
           <button
             onClick={signInWithGoogle}
-            className="w-full flex items-center justify-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400/50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-3 px-4 py-2.5 text-sm font-medium text-teal-500 bg-white hover:text-white hover:bg-gradient-to-r hover:from-rose-300 hover:to-teal-300 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400/50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? (
               <>
@@ -133,7 +133,7 @@ const LogIn = () => {
               </>
             ) : (
               <>
-                <Camera />
+                <img src="https://mailmeteor.com/logos/assets/PNG/Gmail_Logo_512px.png" alt="Google" className="w-5 h-4" />
                 Continue with Google
               </>
             )}
@@ -147,7 +147,7 @@ const LogIn = () => {
         </div>
 
         <form onSubmit={signInWithMailhub} className="space-y-6">
-          <div className="relative animate-slideIn [animation-delay-400ms] opacity-0">
+          <div className="relative animate-slideIn [animation-delay:400ms] opacity-0">
             <input
               id="email"
               type="email"
@@ -165,7 +165,7 @@ const LogIn = () => {
             </label>
           </div>
 
-          <div className="relative animate-slideIn [animation-delay-800ms] opacity-0">
+          <div className="relative animate-slideIn [animation-delay:400ms] opacity-0">
             <input
               id="password"
               type="password"
@@ -193,7 +193,7 @@ const LogIn = () => {
             </button>
           </div>
 
-          <div className="flex flex-col space-y-4 animate-slideIn">
+          <div className="flex flex-col space-y-4 animate-slideIn [animation-delay:800ms] opacity-0">
             <button
               type="submit"
               disabled={isLoading}
