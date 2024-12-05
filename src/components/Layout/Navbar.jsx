@@ -165,7 +165,7 @@ const Navbar = () => {
               src="https://mailmeteor.com/logos/assets/PNG/Gmail_Logo_512px.png"
               alt="gmail-logo"
             />
-            <h1 className="text-2xl text-gray-500 font-normal">Gmail</h1>
+            <h1 className="text-2xl text-gray-500 font-extrabold">MailHub</h1>
           </div>
         </div>
       </div>
