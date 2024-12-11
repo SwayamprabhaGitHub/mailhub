@@ -34,7 +34,7 @@
 }
 
 #nprogress .bar {
-  background: #cf1d26; /* Change this to your desired color */
+  background: #2dd4bf; /* Change this to your desired color */
   position: fixed;
   z-index: 1031; /* Adjust if necessary */
   top: 0;
@@ -49,7 +49,7 @@
   right: 0; /* Start peg from the right */
   width: 100px; /* Width of the peg */
   height: 100%; /* Full height */
-  box-shadow: 0 0 10px #cf1d26, 0 0 5px #cf1d26; /* Color for peg shadow */
+  box-shadow: 0 0 10px #2dd4bf, 0 0 5px #2dd4bf; /* Color for peg shadow */
   opacity: 1; /* Opacity of the peg */
   transform: translate3d(0, 0, 0); /* Smooth transition */
 }
@@ -66,8 +66,8 @@
   width: 48px; /* Adjust width */
   height: 48px; /* Adjust height */
   border: solid 2px transparent; /* Border for the spinner */
-  border-top-color: #cf1d26; /* Change spinner color */
-  border-left-color: #cf1d26; /* Change spinner color */
+  border-top-color: #2dd4bf; /* Change spinner color */
+  border-left-color: #2dd4bf; /* Change spinner color */
   border-radius: 50%; /* Make it round */
   animation: nprogress-spinner 400ms linear infinite; /* Animation */
 }

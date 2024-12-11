@@ -118,19 +118,19 @@ const UserProfile = () => {
 
   return (
     <Card>
-      <div className="w-full max-w-3xl p-8 mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+      <div className="w-full max-w-lg p-4 mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
         <div className="relative">
           {/* Decorative background */}
           <div className="absolute inset-0 bg-gradient-to-br from-teal-50 to-rose-50 opacity-50 rounded-xl " />
           {profile ? (
-            <div className="relative text-center mb-8 p-6">
+            <div className="relative text-center p-3">
               <div
                 onClick={() => navigate(`/${selectedMailPath}`)}
                 className="absolute p-3 rounded-full hover:bg-teal-300/30 cursor-pointer transition-all duration-300"
               >
                 <IoMdArrowBack size={"20px"} />
               </div>
-              <h2 className="text-4xl font-bold text-gray-800 mb-3">
+              <h2 className="text-3xl font-bold text-gray-800">
                 User Profile
               </h2>
               <p className="text-gray-500">Manage your account information</p>
@@ -138,10 +138,10 @@ const UserProfile = () => {
               {/* Email Verification Status */}
               <div
                 onClick={!profile.emailVerified ? handleVerifyEmail : null} //only adds onClick when email is not verified
-                className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm mb-3 font-medium ${
+                className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium ${
                   profile.emailVerified
                     ? "bg-teal-50 text-teal-600"
-                    : "bg-rose-50 text-rose-700 cursor-pointer hover:shadow-lg hover:scale-102 hover:bg-rose-300/40 transition-all duration-200 ease-in-out active:scale-95"
+                    : "bg-rose-50 text-rose-700 cursor-pointer hover:shadow-lg hover:scale-102 hover:bg-rose-300/40 transition-all duration-200 ease-in-out active:scale-98"
                 }`}
               >
                 {profile.emailVerified ? (
@@ -157,10 +157,10 @@ const UserProfile = () => {
                 )}
               </div>
 
-              <form onSubmit={handleProfileSubmit} className="space-y-6">
+              <form onSubmit={handleProfileSubmit} className="space-y-2">
                 {/* Profile Display Section */}
-                <div className="relative flex flex-col items-center mb-8">
-                  <div className="w-30 h-30 rounded-full border-4 border-white shadow-xl overflow-hidden mb-2 bg-gradient-to-br from-teal-100 to-rose-100">
+                <div className="relative flex flex-col items-center">
+                  <div className="w-16 h-16 rounded-full border-4 border-white shadow-xl overflow-hidden bg-gradient-to-br from-teal-100 to-rose-100">
                     <img
                       src={
                         profile?.photoURL ||
@@ -170,17 +170,17 @@ const UserProfile = () => {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div className="flex items-center mt-2">
-                    <h3 className="text-xl font-semibold text-gray-700">
+                  <div className="flex items-center mt-1">
+                    <h3 className="text-lg font-semibold text-gray-700">
                       {profile.email}
                     </h3>
                   </div>
                 </div>
 
                 {/* Form Fields */}
-                <div className="space-y-6">
+                <div className="space-y-2">
                   <div className="relative">
-                    <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                    <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
                       <User className="w-4 h-4" />
                       Display Name
                     </label>
@@ -207,7 +207,7 @@ const UserProfile = () => {
                   </div>
 
                   <div className="relative">
-                    <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                    <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
                       <Phone className="w-4 h-4" />
                       Phone Number
                     </label>
@@ -234,7 +234,7 @@ const UserProfile = () => {
                   </div>
 
                   <div className="relative">
-                    <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                    <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
                       <Link className="w-4 h-4" />
                       Photo URL
                     </label>
@@ -261,8 +261,8 @@ const UserProfile = () => {
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-6">
-                    <div className="bg-white rounded-xl p-4 border border-gray-100">
-                      <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                    <div className="bg-white rounded-xl p-2 border border-gray-100">
+                      <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
                         <Calendar className="w-4 h-4" />
                         Account Created
                       </label>
@@ -270,8 +270,8 @@ const UserProfile = () => {
                         {profile.createdAt}
                       </div>
                     </div>
-                    <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                      <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                    <div className="bg-gray-50 rounded-xl p-2 border border-gray-100">
+                      <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
                         <Clock className="w-4 h-4" />
                         Last Login
                       </label>
@@ -288,7 +288,7 @@ const UserProfile = () => {
                   isEditing.photoURL) && (
                   <button
                     type="submit"
-                    className="w-full px-6 py-3 text-sm font-medium text-white bg-gradient-to-r from-teal-400 to-rose-400 hover:from-teal-300 hover:to-rose-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400/50 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5"
+                    className="w-full px-6 py-[0.61rem] text-sm font-medium text-white bg-gradient-to-r from-teal-400 to-rose-400 hover:from-teal-300 hover:to-rose-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400/50 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5"
                   >
                     Save Changes
                   </button>
