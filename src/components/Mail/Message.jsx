@@ -91,11 +91,11 @@ const Message = ({ email, index }) => {
     >
       <div className="flex items-center gap-1">
         <div className="flex-none text-gray-300 px-1 py-2" onClick={handleSelectedEmail} >
-          {selectSquare ? <IoMdCheckboxOutline className="w-5 h-5 text-teal-400" />:<MdCropSquare className="w-5 h-5 hover:text-gray-300" />}
+          {selectSquare ? <IoMdCheckboxOutline className="w-5 h-5 text-teal-400" />:<MdCropSquare className="w-5 h-5 hover:text-gray-600" />}
           {/* {improve} */}
         </div>
         <div className="flex-none text-gray-300 px-1 py-2" onClick={handleSelectedStarredEmail}>
-        {email?.starred ? <RiStarSFill className="w-5 h-5 text-teal-400" />:<RiStarLine className="w-5 h-5 hover:text-gray-300" />}
+        {email?.starred ? <RiStarSFill className="w-5 h-5 text-teal-400" />:<RiStarLine className="w-5 h-5 hover:text-gray-600" />}
         </div>
         <div className="flex-none text-gray-300 px-1 py-2" onClick={handleSelectedTrashedEmail}>
           {email?.trashed ? <TbTrashX id="selected-mail-trash-2" className="w-5 h-5 text-rose-600 hover:text-teal-400" /> : <TbTrashX id="selected-mail-trash-1" className="w-5 h-5 hover:text-rose-600" />}

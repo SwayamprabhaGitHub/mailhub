@@ -64,7 +64,7 @@ const SendMail = () => {
         open ? "block" : "hidden"
       } bg-[#eff1fc] max-w-xl max-h-min shadow-xl shadow-slate-600 rounded-t-md`}
     >
-      <div className="flex px-3 py-2 bg-[#F2F6Fc] justify-between rounded-t-md">
+      <div className="flex px-3 py-2 bg-[#c1c9ee] justify-between rounded-t-md">
         <h1>New message</h1>
         <div
           onClick={() => dispatch(setOpen(false))}

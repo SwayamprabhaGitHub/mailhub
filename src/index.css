@@ -25,7 +25,7 @@
   
   .custom-quill-editor .ql-editor {
     @apply focus:outline-none; /* Remove focus outline when editing */
-    @apply h-[300px] overflow-y-auto;
+    @apply h-[300px] w-[400px] overflow-y-auto;
   }
 
   /* Custom NProgress styles */

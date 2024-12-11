@@ -10,14 +10,14 @@ const ComposeMail = ({ to, setTo, subject, setSubject, editorContent, setEditorC
           value={to}
           onChange={(e) => setTo(e.target.value)}
           placeholder="To"
-          className="w-full p-2 border border-b-slate-300 border-t-0 border-r-0 border-l-0 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 border border-b-slate-300 border-t-0 border-r-0 border-l-0 focus:outline-none"
         />
         <input
           type="text"
           value={subject}
           onChange={(e) => setSubject(e.target.value)}
           placeholder="Subject"
-          className="w-full p-2 border border-b-slate-300 border-t-0 border-r-0 border-l-0 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 border border-b-slate-300 border-t-0 border-r-0 border-l-0 focus:outline-none"
         />
       </div>
       <div className="text-editor-container">
