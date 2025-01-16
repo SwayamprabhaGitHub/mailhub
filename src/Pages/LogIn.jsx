@@ -87,6 +87,25 @@ const LogIn = () => {
     }
   };
 
+  const signinWithGuest = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+ 
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, "pswayamprabha@gmail.com", "123456");
+      const docsnap = await getDoc(doc(db, userCredential.user.email, userCredential.user.email));
+      const docdata = docsnap.exists() ? docsnap.data() : {};
+      const loggedInUser = useCurrentUser(userCredential.user, docdata);
+      dispatch(setUser(loggedInUser));
+      createDoc(loggedInUser, userCredential.user.email);
+      toast.success("Welcome to Mailhub!");
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     const user = auth.currentUser;
 
@@ -108,6 +127,7 @@ const LogIn = () => {
 
   return (
     <Card>
+      <div className="w-full flex flex-col justify-center items-center">
       {/* Sign in form */}
       <div className="w-full max-w-md p-8 rounded-xl relative z-10 mx-4 backdrop-blur-3xl bg-white/10 border border-white/70 shadow-xl animate-fadeIn">
         <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-transparent to-white/10 rounded-xl -z-10" />
@@ -219,6 +239,22 @@ const LogIn = () => {
           </div>
         </form>
       </div>
+      <button
+              type="button"
+              onClick={signinWithGuest}
+              disabled={isLoading}
+              className="w-full max-w-md mt-5 px-4 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-teal-400 to-rose-400 hover:from-teal-300 hover:to-rose-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400/50 shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center z-50 animate-slideIn [animation-delay:1200ms] opacity-0"
+            >
+              {isLoading ? (
+                <>
+                  <BiLoader className="w-5 h-5 animate-spin mr-2" />
+                  Loading...
+                </>
+              ) : (
+                "Continue as Guest"
+              )}
+            </button>
+            </div>
     </Card>
   );
 };
